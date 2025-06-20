@@ -12,8 +12,8 @@ export default function RootLayout() {
         options={{ title: "weather", headerShown: false }}
       ></Stack.Screen>
       <Stack.Screen
-        name="setting"
-        options={{ title: "settings", headerShown: false }}
+        name="settings"
+        options={{ title: "settings" }}
       ></Stack.Screen>
     </Stack>
   );

@@ -2,7 +2,7 @@ export const colors = {
     background: "#F5F7FA",
     card: "#FFFFFF",
     text: "#222222",
-    textSecondary: "#666666",
+    textSecondary: "whitesmoke",
     border: "#D1D5DB",
     
     weather: {

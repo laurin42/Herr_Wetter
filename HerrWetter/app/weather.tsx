@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 export default function WeatherScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Wetter</Text>
+      <Text style={styles.text}></Text>
     </View>
   );
 }
