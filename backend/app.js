@@ -6,8 +6,10 @@ dotenv.config();
 
 const app = express()
 const port = 3000
+const apiKey = process.env.API_KEY;
 
 app.use(cors());
+
 
 
 app.get('/api/currentWeather', async (req, res) => {
@@ -19,10 +21,10 @@ app.get('/api/currentWeather', async (req, res) => {
 
     try {
         const currentWeather = await fetch(
-            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=3&lang=de`
+            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`
         )
         const data = await currentWeather.json();
-        if (!data.ok) {
+        if (data.error) {
             return res.status(500).json({ error: "Keine daten vorhanden" });
         }
         res.json(data)
@@ -32,7 +34,6 @@ app.get('/api/currentWeather', async (req, res) => {
 });
 
 
-
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Example app listening on port ${port}`)
 })
