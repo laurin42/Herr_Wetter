@@ -1,0 +1,38 @@
+import dotenv from "dotenv";
+import cors from "cors";
+
+dotenv.config();
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.use(cors());
+
+
+app.get('/api/currentWeather', async (req, res) => {
+    const { latitude, longitude } = req.query;
+
+    if (!latitude || !longitude) {
+        return res.status(400).json({ error: "latitude und longitute müssen angegeben werden" })
+    }
+
+    try {
+        const currentWeather = await fetch(
+            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=3&lang=de`
+        )
+        const data = await currentWeather.json();
+        if (!data.ok) {
+            return res.status(500).json({ error: "Keine daten vorhanden" });
+        }
+        res.json(data)
+    } catch (error) {
+        return res.status(500).json({ error: "keine daten vorhanden" });
+    }
+});
+
+
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
