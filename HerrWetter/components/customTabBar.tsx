@@ -4,8 +4,14 @@ import { useLinkBuilder } from "@react-navigation/native";
 import { darkThemeColors } from "@/theme/darkThemeColors";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 
-export function MyTabBar({ state, descriptors, navigation, position }) {
+export function MyTabBar({
+  state,
+  descriptors,
+  navigation,
+  position,
+}: MaterialTopTabBarProps) {
   const { buildHref } = useLinkBuilder();
 
   const colorScheme = useColorScheme();
@@ -23,9 +29,16 @@ export function MyTabBar({ state, descriptors, navigation, position }) {
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label = options.tabBarLabel ?? options.title ?? route.name;
-
         const isFocused = state.index === index;
+
+        const label =
+          typeof options.tabBarLabel === "function"
+            ? options.tabBarLabel({
+                focused: isFocused,
+                color: isFocused ? colors.ui.active : colors.text,
+                children: route.name,
+              })
+            : options.tabBarLabel ?? options.title ?? route.name;
 
         const onPress = () => {
           const event = navigation.emit({
