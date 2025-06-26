@@ -8,12 +8,8 @@ export default function RootLayout() {
         options={{ title: "index", headerShown: false }}
       ></Stack.Screen>
       <Stack.Screen
-        name="weather"
-        options={{ title: "weather", headerShown: false }}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="settings"
-        options={{ title: "settings" }}
+        name="(tabs)"
+        options={{ title: "(tabs)", headerShown: false }}
       ></Stack.Screen>
     </Stack>
   );

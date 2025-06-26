@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, useColorScheme } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { getCurrentWeather, WeatherData } from "@/services/weatherService";
-import { styles } from "@/styles/weatherScreen";
+import { lightWeatherStyles } from "@/styles/lightWeatherScreen";
+import { darkWeatherStyles } from "@/styles/darkWeatherScreen";
 
 export default function WeatherScreen() {
   const params = useLocalSearchParams();
@@ -13,6 +14,10 @@ export default function WeatherScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherError, setWeatherError] = useState<string | null>(null);
+
+  let colorScheme = useColorScheme();
+  const styles =
+    colorScheme === "dark" ? darkWeatherStyles : lightWeatherStyles;
 
   useEffect(() => {
     async function currentWeather() {

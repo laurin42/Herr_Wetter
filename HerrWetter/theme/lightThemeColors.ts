@@ -1,4 +1,4 @@
-export const colors = {
+export const lightThemeColors = {
     background: "#F5F7FA",
     card: "#FFFFFF",
     text: "#222222",
