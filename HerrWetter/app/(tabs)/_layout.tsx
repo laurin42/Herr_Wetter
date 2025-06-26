@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { MyTabBar } from "@/components/customTabBar";
+import { MyTabBar } from "@/components/navigation/customTabBar";
 import WeatherScreen from "./weather";
 import SettingsScreen from "./settings";
 
