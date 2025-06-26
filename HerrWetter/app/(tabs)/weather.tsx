@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Text, View, Image, useColorScheme } from "react-native";
+import { Text, Image, View, useColorScheme } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { getCurrentWeather, WeatherData } from "@/services/weatherService";
 import { lightWeatherStyles } from "@/styles/lightWeatherScreen";
 import { darkWeatherStyles } from "@/styles/darkWeatherScreen";
+import { lightThemeColors } from "@/theme/lightThemeColors";
+import { darkThemeColors } from "@/theme/darkThemeColors";
 
 export default function WeatherScreen() {
   const params = useLocalSearchParams();
@@ -18,6 +21,10 @@ export default function WeatherScreen() {
   let colorScheme = useColorScheme();
   const styles =
     colorScheme === "dark" ? darkWeatherStyles : lightWeatherStyles;
+
+  const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
+
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     async function currentWeather() {
@@ -57,27 +64,35 @@ export default function WeatherScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={{ uri: `https:${weather?.iconUrl}` }}
-        style={styles.icon}
-        resizeMode="contain"
-      ></Image>
-      <Text style={styles.location}>
-        {weather?.city}, {weather?.region}, {weather?.country}
-      </Text>
-      <Text style={styles.condition}>{weather?.condition}</Text>
-      <Text style={styles.detail}>
-        aktuelle Temperatur: {weather?.temperature}°C
-      </Text>
-      <Text style={styles.details}>
-        gefühlte Temperatur: {weather?.feelslikeC}°C
-      </Text>
-      <Text style={styles.details}>Niederschlag: {weather?.precipMm}mm</Text>
-      <Text style={styles.details}>Windstärke: {weather?.windKph} kmh</Text>
-      <Text style={styles.details}>
-        Windrichtung: {weather?.windDegree}, {weather?.windDirection}
-      </Text>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: insets.top,
+        backgroundColor: colors.background,
+      }}
+    >
+      <View style={styles.container}>
+        <Image
+          source={{ uri: `https:${weather?.iconUrl}` }}
+          style={styles.icon}
+          resizeMode="contain"
+        ></Image>
+        <Text style={styles.location}>
+          {weather?.city}, {weather?.region}, {weather?.country}
+        </Text>
+        <Text style={styles.condition}>{weather?.condition}</Text>
+        <Text style={styles.detail}>
+          aktuelle Temperatur: {weather?.temperature}°C
+        </Text>
+        <Text style={styles.details}>
+          gefühlte Temperatur: {weather?.feelslikeC}°C
+        </Text>
+        <Text style={styles.details}>Niederschlag: {weather?.precipMm}mm</Text>
+        <Text style={styles.details}>Windstärke: {weather?.windKph} kmh</Text>
+        <Text style={styles.details}>
+          Windrichtung: {weather?.windDegree}, {weather?.windDirection}
+        </Text>
+      </View>
     </View>
   );
 }

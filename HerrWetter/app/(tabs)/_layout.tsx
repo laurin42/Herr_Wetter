@@ -1,49 +1,38 @@
-import { Tabs } from "expo-router";
-import { PlatformPressable } from "@react-navigation/elements";
-import { useColorScheme } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { lightThemeColors } from "@/theme/lightThemeColors";
-import { darkThemeColors } from "@/theme/darkThemeColors";
+
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { MyTabBar } from "@/components/customTabBar";
+import WeatherScreen from "./weather";
+import SettingsScreen from "./settings";
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function TabLayout() {
-  let colorScheme = useColorScheme();
-  const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.ui.active,
-        tabBarButton: (props) => (
-          <PlatformPressable
-            {...props}
-            android_ripple={{ color: "transparent" }}
-          />
-        ),
-        headerPressOpacity: 0,
-      }}
+    <Tab.Navigator
+      tabBarPosition="bottom"
+      tabBar={(props) => <MyTabBar {...props} />}
     >
-      <Tabs.Screen
+      <Tab.Screen
         name="weather"
+        component={WeatherScreen}
         options={{
-          headerShown: false,
           title: "Wetter",
-          animation: "none",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cloud" color={color} />
+            <FontAwesome size={24} name="cloud" color={color} />
           ),
         }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="settings"
+        component={SettingsScreen}
         options={{
-          headerShown: false,
           title: "Einstellungen",
-          animation: "none",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+            <FontAwesome size={24} name="cog" color={color} />
           ),
         }}
       />
-    </Tabs>
+    </Tab.Navigator>
   );
 }
