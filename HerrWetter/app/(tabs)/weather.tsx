@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import { Text, Image, View, useColorScheme } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { getCurrentWeather, WeatherData } from "@/services/weatherService";
-import { lightWeatherStyles } from "@/styles/lightWeatherScreen";
-import { darkWeatherStyles } from "@/styles/darkWeatherScreen";
-import { lightThemeColors } from "@/theme/lightThemeColors";
-import { darkThemeColors } from "@/theme/darkThemeColors";
+import CurrentWeatherCard from "@/components/currentWeatherCard";
 
 export default function WeatherScreen() {
   const params = useLocalSearchParams();
@@ -16,20 +11,12 @@ export default function WeatherScreen() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [weatherError, setWeatherError] = useState<string | null>(null);
-
-  let colorScheme = useColorScheme();
-  const styles =
-    colorScheme === "dark" ? darkWeatherStyles : lightWeatherStyles;
-
-  const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
-
-  const insets = useSafeAreaInsets();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function currentWeather() {
       if (baseError) {
-        setWeatherError(baseError);
+        setError(baseError);
         setIsLoading(false);
         return;
       }
@@ -37,9 +24,9 @@ export default function WeatherScreen() {
       try {
         const data = await getCurrentWeather(latitude, longitude);
         setWeather(data);
-        setWeatherError(null);
+        setError(null);
       } catch (error: any) {
-        setWeatherError(error.message);
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -47,52 +34,11 @@ export default function WeatherScreen() {
     currentWeather();
   }, [latitude, longitude, baseError]);
 
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Wetterdaten werden geladen...</Text>
-      </View>
-    );
-  }
-
-  if (weatherError) {
-    return (
-      <View>
-        <Text>Fehler: {weatherError}</Text>
-      </View>
-    );
-  }
-
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        backgroundColor: colors.background,
-      }}
-    >
-      <View style={styles.container}>
-        <Image
-          source={{ uri: `https:${weather?.iconUrl}` }}
-          style={styles.icon}
-          resizeMode="contain"
-        ></Image>
-        <Text style={styles.location}>
-          {weather?.city}, {weather?.region}, {weather?.country}
-        </Text>
-        <Text style={styles.condition}>{weather?.condition}</Text>
-        <Text style={styles.detail}>
-          aktuelle Temperatur: {weather?.temperature}°C
-        </Text>
-        <Text style={styles.details}>
-          gefühlte Temperatur: {weather?.feelslikeC}°C
-        </Text>
-        <Text style={styles.details}>Niederschlag: {weather?.precipMm}mm</Text>
-        <Text style={styles.details}>Windstärke: {weather?.windKph} kmh</Text>
-        <Text style={styles.details}>
-          Windrichtung: {weather?.windDegree}, {weather?.windDirection}
-        </Text>
-      </View>
-    </View>
+    <CurrentWeatherCard
+      weather={weather}
+      isLoading={isLoading}
+      error={error ?? undefined}
+    />
   );
 }

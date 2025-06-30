@@ -25,14 +25,15 @@ export const lightWeatherStyles = StyleSheet.create({
         color: colors.text,
     },
     location: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 12,
         color: colors.text,
     },
     details: {
+        fontSize: 14,
+        color: colors.text,
         borderTopWidth: 1,
         borderTopColor: colors.border,
-        paddingTop: 12,
     },
     detail: {
         fontSize: 14,

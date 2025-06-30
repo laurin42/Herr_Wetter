@@ -7,6 +7,7 @@ export type WeatherData = {
     windDegree: number,
     windDirection: string,
     windKph: number,
+    uv: number,
     iconUrl: string;
     city: string;
     region: string; 
@@ -16,7 +17,8 @@ export type WeatherData = {
 
 export async function getCurrentWeather(latitude: number, longitude: number): Promise<WeatherData> {
     const response = await fetch(
-        `http://192.168.178.67:3000/api/currentWeather?latitude=${latitude}&longitude=${longitude}`
+        `http://192.168.178.67:3000/api/currentWeather?latitude=${latitude}&longitude=${longitude}`,
+        { cache: "no-store" }
     );
 
     if (!response.ok) {
@@ -33,6 +35,7 @@ export async function getCurrentWeather(latitude: number, longitude: number): Pr
         windDegree: weatherData.current.wind_degree,
         windDirection: weatherData.current.wind_dir,
         windKph: weatherData.current.wind_kph,
+        uv: weatherData.current.uv,
         iconUrl: weatherData.current.condition.icon,
         city: weatherData.location.name,
         region: weatherData.location.region,

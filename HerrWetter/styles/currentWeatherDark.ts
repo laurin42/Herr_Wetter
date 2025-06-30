@@ -9,9 +9,12 @@ export const darkWeatherStyles = StyleSheet.create({
         backgroundColor: colors.card,
         elevation: 4,
     },
+    conditionContainer: {
+        
+    },
     icon: {
-        width: 64,
-        height: 64,
+        width: 100,
+        height: 100,
         marginRight: 12,
     },
     temp: {
@@ -24,15 +27,20 @@ export const darkWeatherStyles = StyleSheet.create({
         color: colors.text,
     },
     location: {
-        fontSize: 16,
-        marginBottom: 12,
+        fontSize: 12,
+        marginBottom: 24,
+        borderBottomWidth: 1,
+         borderBottomColor: colors.border,
+         paddingVertical: 4,
+
         color: colors.text,
     },
     details: {
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
-        paddingTop: 12,
-        color: colors.text,
+         fontSize: 14,
+         color: colors.text,
+         borderTopWidth: 1,
+         borderTopColor: colors.border,
+         paddingVertical: 12,
     },
     detail: {
         fontSize: 14,
