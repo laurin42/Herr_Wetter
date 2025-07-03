@@ -1,27 +1,27 @@
 export const lightThemeColors = {
-    background: "#F5F7FA",
-    card: "#FFFFFF",
-    text: "#222222",
-    textSecondary: "whitesmoke",
-    border: "#D1D5DB",
-    
-    weather: {
-        sun: "#FDB813",
-        rain: "#1E90FF",
-        storm: {
-            background: "#374151",
-            accent: "#FBBF24",
-        },
-        snow: "#D0F0FF",
-        fog: "#E5E7EB",
-        night: "#1E293B",
-    },
+  background: "#F5F7FA",
+  card: "#FFFFFF",
+  text: "#1A1A1A",
+  textSecondary: "#4A4A4A",
+  border: "#D1D5DB",
 
-    ui: {
-        buttonPrimary: "#2563EB",
-        hover: "#1D4ED8",
-        active: "#1E40AF",
-        error: "#DC2626",
-        succes: "#16A34A",
+  weather: {
+    sun: "#FFA500",
+    rain: "#5A8DA8",
+    storm: {
+      background: "#E8EDF2",
+      accent: "#003366",
     },
+    snow: "#A9D2E0",
+    fog: "#7F8C8D",
+    night: "#2F3E4D",
+  },
+
+  ui: {
+    buttonPrimary: "#003366",
+    hover: "#00509E",
+    active: "#002244",
+    error: "#DC2626",
+    succes: "#16A34A",
+  },
 };

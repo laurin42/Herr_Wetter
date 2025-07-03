@@ -7,32 +7,43 @@ export const darkWeatherStyles = StyleSheet.create({
         padding: 20,
         borderRadius: 12,
         backgroundColor: colors.card,
-        elevation: 4,
+        elevation: 10,
     },
-    conditionContainer: {
-        
+    locationContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingBottom: 6,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
     },
-    icon: {
-        width: 100,
-        height: 100,
-        marginRight: 12,
-    },
-    temp: {
-        fontSize: 32,
-        fontWeight: "bold",
-        color: colors.text,
-    },
-    condition: {
-        fontSize: 18,
-        color: colors.text,
+    locationTextContainer: {
+        flexDirection: "column",
     },
     location: {
+        display: "flex",
+        fontSize: 24,
+        color: colors.text,
+    },
+    locationDetails: {
         fontSize: 12,
-        marginBottom: 24,
-        borderBottomWidth: 1,
-         borderBottomColor: colors.border,
-         paddingVertical: 4,
-
+        color: colors.textSecondary,
+    },
+    conditionContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        paddingVertical: 32,
+    },
+    conditionTextContainer: {
+        flexDirection: "column",
+        justifyContent: "center",
+        marginLeft: 12,
+    },
+    condition: {
+        fontSize: 16,
         color: colors.text,
     },
     details: {
@@ -46,5 +57,17 @@ export const darkWeatherStyles = StyleSheet.create({
         fontSize: 14,
         color: colors.text,
         marginBottom: 4,
+    },
+    icon: {
+        width: 100,
+        height: 100,
+        marginRight: 12,
+    },
+    addIcon: {
+            color: colors.ui.buttonPrimary,
+        },
+    temp: {
+        fontSize: 40,
+        color: colors.text,
     },
 });

@@ -5,6 +5,7 @@ import { lightWeatherStyles } from "@/styles/currentWeatherLight";
 import { darkWeatherStyles } from "@/styles/currentWeatherDark";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { darkThemeColors } from "@/theme/darkThemeColors";
+import { Ionicons } from "@expo/vector-icons";
 
 type CurrentWeatherCardProps = {
   weather: WeatherData | null;
@@ -52,22 +53,31 @@ export default function CurrentWeatherCard({
       }}
     >
       <View style={styles.container}>
-        <Text style={styles.location}>
-          {weather.city}, {weather.region}, {weather.country}
-        </Text>
+        <View style={styles.locationContainer}>
+          <View style={styles.locationTextContainer}>
+            <Text style={styles.location}>{weather.city}, </Text>
+            <Text style={styles.locationDetails}>
+              {weather.region}, {weather.country}
+            </Text>
+          </View>
+          <Ionicons
+            name="add-circle-outline"
+            size={32}
+            style={styles.addIcon}
+          />
+        </View>
         <View style={styles.conditionContainer}>
-          <Text style={styles.condition}>{weather.condition}</Text>
-
           <Image
             source={{ uri: `https:${weather.iconUrl}` }}
             style={styles.icon}
             resizeMode="contain"
           />
+          <View style={styles.conditionTextContainer}>
+            <Text style={styles.temp}>{weather.temperature}°C</Text>
+            <Text style={styles.condition}>{weather.condition}</Text>
+          </View>
         </View>
 
-        <Text style={styles.detail}>
-          aktuelle Temperatur: {weather.temperature}°C
-        </Text>
         <Text style={styles.details}>
           gefühlte Temperatur: {weather.feelslikeC}°C
         </Text>

@@ -23,8 +23,7 @@ export function MyTabBar({
     <View
       style={{
         flexDirection: "row",
-        backgroundColor: colors.background,
-        opacity: 0.9,
+        backgroundColor: colors.card,
       }}
     >
       {state.routes.map((route, index) => {
