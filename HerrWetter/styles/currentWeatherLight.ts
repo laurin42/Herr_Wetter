@@ -3,46 +3,50 @@ import { lightThemeColors as colors } from "@/theme/lightThemeColors";
 
 
 export const lightWeatherStyles = StyleSheet.create({
- container: {
+    container: {
         margin: 16,
         padding: 20,
         borderRadius: 12,
         backgroundColor: colors.card,
-        elevation: 4,
+        elevation: 10,
     },
     locationContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "flex-start",
-        paddingBottom: 4,
+        alignItems: "center",
+        paddingBottom: 6,
         borderBottomWidth: 1,
         borderBottomColor: colors.border,
     },
     locationTextContainer: {
         flexDirection: "column",
-    },    
+    },
     location: {
-        fontSize: 12,
-        marginBottom: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
-        paddingVertical: 4,
+        display: "flex",
+        fontSize: 24,
         color: colors.text,
+    },
+    cityRow: {
+        flexDirection: "row",
+        alignItems: "flex-start",
     },
     locationDetails: {
         fontSize: 12,
+        color: colors.textSecondary,
     },
     conditionContainer: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start",
+        paddingVertical: 32,
     },
     conditionTextContainer: {
         flexDirection: "column",
         justifyContent: "center",
         marginLeft: 12,
+        position: "relative",
     },
     condition: {
         fontSize: 16,
@@ -60,13 +64,19 @@ export const lightWeatherStyles = StyleSheet.create({
         color: colors.text,
         marginBottom: 4,
     },
-    icon: {
+    weatherIcon: {
         width: 100,
         height: 100,
         marginRight: 12,
     },
     addIcon: {
-        color: colors.ui.buttonPrimary
+            color: colors.ui.buttonPrimary,
+        },
+    editIcon: {
+        fontSize: 12,
+        color: colors.ui.buttonPrimary,
+        marginTop: 2,
+        marginLeft: 8,
     },
     temp: {
         fontSize: 40,

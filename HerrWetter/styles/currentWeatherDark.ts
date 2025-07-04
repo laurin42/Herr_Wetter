@@ -26,6 +26,10 @@ export const darkWeatherStyles = StyleSheet.create({
         fontSize: 24,
         color: colors.text,
     },
+    cityRow: {
+        flexDirection: "row",
+        alignItems: "flex-start",
+    },
     locationDetails: {
         fontSize: 12,
         color: colors.textSecondary,
@@ -41,6 +45,7 @@ export const darkWeatherStyles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         marginLeft: 12,
+        position: "relative",
     },
     condition: {
         fontSize: 16,
@@ -58,7 +63,7 @@ export const darkWeatherStyles = StyleSheet.create({
         color: colors.text,
         marginBottom: 4,
     },
-    icon: {
+    weatherIcon: {
         width: 100,
         height: 100,
         marginRight: 12,
@@ -66,6 +71,12 @@ export const darkWeatherStyles = StyleSheet.create({
     addIcon: {
             color: colors.ui.buttonPrimary,
         },
+    editIcon: {
+        fontSize: 12,
+        color: colors.ui.buttonPrimary,
+        marginTop: 2,
+        marginLeft: 8,
+    },
     temp: {
         fontSize: 40,
         color: colors.text,
