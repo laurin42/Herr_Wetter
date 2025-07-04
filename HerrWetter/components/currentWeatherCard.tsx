@@ -7,6 +7,7 @@ import {
   Button,
   useColorScheme,
   Pressable,
+  FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -21,12 +22,22 @@ import { darkThemeColors } from "@/theme/darkThemeColors";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
+type CitySuggestion = {
+  city: string;
+  region: string;
+  country: string;
+  id: number;
+};
+
 export default function CurrentWeatherCard() {
   const [city, setCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState<CitySuggestion | null>(null);
   const [citySearchVisible, setCitySearchVisible] = useState(false);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [citySuggestion, setCitySuggestions] = useState<CitySuggestion[]>([]);
+  const [fetchCitySuggestions, setFetchCitySuggestions] = useState(false);
 
   const colorScheme = useColorScheme();
   const styles =
@@ -34,15 +45,21 @@ export default function CurrentWeatherCard() {
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
   const insets = useSafeAreaInsets();
 
-  async function handleSearch() {
-    if (!city.trim()) return;
+  async function handleSearch(cityName?: string) {
+    const name = cityName ?? city.trim();
+    if (!name) return;
     setIsLoading(true);
-    const { data, error } = await getCurrentWeatherByCity(city.trim());
+    const { data, error } = await getCurrentWeatherByCity(name);
     setWeather(data);
     setError(error);
     setIsLoading(false);
     if (data) setCitySearchVisible(false);
   }
+
+  const handleCitySelect = (city: CitySuggestion) => {
+    setSelectedCity(city);
+    setCitySearchVisible(false);
+  };
 
   async function loadWeatherByLocation() {
     setIsLoading(true);
@@ -51,6 +68,37 @@ export default function CurrentWeatherCard() {
     setError(error);
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    if (city.length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
+
+    const handler = setTimeout(() => {
+      const fetchSuggestions = async () => {
+        setFetchCitySuggestions(true);
+        try {
+          const response = await fetch(
+            `http://192.168.178.67:3000/api/cities?q=${encodeURIComponent(
+              city
+            )}`
+          );
+          if (!response.ok) throw new Error("Fehler beim Laden der Vorschläge");
+          const data: CitySuggestion[] = await response.json();
+          setCitySuggestions(data);
+        } catch (e) {
+          setCitySuggestions([]);
+        } finally {
+          setFetchCitySuggestions(false);
+        }
+      };
+
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [city]);
 
   useEffect(() => {
     loadWeatherByLocation();
@@ -71,6 +119,11 @@ export default function CurrentWeatherCard() {
             value={city}
             onChangeText={setCity}
             placeholderTextColor="#aaa"
+            onFocus={() => {
+              if (city.length > 0) {
+                setCity("");
+              }
+            }}
             style={{
               backgroundColor: colors.card,
               color: colors.text,
@@ -81,7 +134,62 @@ export default function CurrentWeatherCard() {
               borderWidth: 1,
             }}
           />
-          <Button title="Suchen" onPress={handleSearch} />
+
+          {fetchCitySuggestions && (
+            <Text style={{ color: colors.text, marginBottom: 8 }}>
+              Lade Vorschläge...
+            </Text>
+          )}
+          {!fetchCitySuggestions && citySuggestion.length > 0 && (
+            <FlatList
+              data={citySuggestion}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
+              style={{
+                maxHeight: 200,
+                marginBottom: 8,
+                backgroundColor: colors.card,
+                borderRadius: 8,
+              }}
+              keyboardShouldPersistTaps="handled"
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={async () => {
+                    setSelectedCity(item);
+                    setCitySuggestions([]);
+                    setCitySearchVisible(false);
+
+                    const fullName = [item.city, item.region, item.country]
+                      .filter(Boolean)
+                      .join(", ");
+                    setCity(fullName);
+
+                    setIsLoading(true);
+                    const { data, error } = await getCurrentWeatherByCity(
+                      fullName
+                    );
+                    setWeather(data);
+                    setError(error);
+                    setIsLoading(false);
+                  }}
+                  style={{
+                    padding: 10,
+                    borderBottomColor: colors.border,
+                    borderBottomWidth: 1,
+                  }}
+                >
+                  <Text style={styles.detail}>
+                    {[item.city, item.region, item.country]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </Text>
+                </Pressable>
+              )}
+            />
+          )}
+
+          <Button title="Suchen" onPress={() => handleSearch()} />
         </View>
       )}
 
@@ -103,12 +211,17 @@ export default function CurrentWeatherCard() {
             <View style={styles.locationTextContainer}>
               <Pressable onPress={() => setCitySearchVisible(true)}>
                 <View style={styles.cityRow}>
-                  <Text style={styles.location}>{weather.city}</Text>
+                  <Text style={styles.location}>
+                    {selectedCity?.city ?? weather.city}
+                  </Text>
+
                   <FontAwesome name="pencil" style={styles.editIcon} />
                 </View>
 
                 <Text style={styles.locationDetails}>
-                  {weather.region}, {weather.country}
+                  {(selectedCity?.region ?? weather.region) +
+                    ", " +
+                    (selectedCity?.country ?? weather.country)}
                 </Text>
               </Pressable>
             </View>
