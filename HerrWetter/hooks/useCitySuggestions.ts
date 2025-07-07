@@ -13,7 +13,7 @@ export function useCitySuggestions(city: string) {
     const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (city.length < 2) {
+    if (city.length < 1) {
       setSuggestions([]);
       return;
     }
@@ -38,7 +38,7 @@ export function useCitySuggestions(city: string) {
       };
 
       fetchSuggestions();
-    }, 300);
+    }, 50);
 
     return () => clearTimeout(handler);
   }, [city]);

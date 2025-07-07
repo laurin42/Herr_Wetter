@@ -4,17 +4,11 @@ import {
   Image,
   View,
   TextInput,
-  Button,
   useColorScheme,
   Pressable,
   FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  getCurrentWeatherByCity,
-  getCurrentWeatherByLocation,
-  WeatherData,
-} from "@/services/weatherService";
 import { lightWeatherStyles } from "@/styles/currentWeatherLight";
 import { darkWeatherStyles } from "@/styles/currentWeatherDark";
 import { lightThemeColors } from "@/theme/lightThemeColors";
@@ -22,22 +16,22 @@ import { darkThemeColors } from "@/theme/darkThemeColors";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-type CitySuggestion = {
-  city: string;
-  region: string;
-  country: string;
-  id: number;
-};
+import { useWeather } from "@/hooks/useWeather";
+import { useCitySuggestions } from "@/hooks/useCitySuggestions";
 
 export default function CurrentWeatherCard() {
   const [city, setCity] = useState("");
-  const [selectedCity, setSelectedCity] = useState<CitySuggestion | null>(null);
-  const [citySearchVisible, setCitySearchVisible] = useState(false);
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [citySuggestion, setCitySuggestions] = useState<CitySuggestion[]>([]);
-  const [fetchCitySuggestions, setFetchCitySuggestions] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [editCity, setEditCity] = useState(false);
+  const { suggestions, isLoading: isLoadingSuggestions } =
+    useCitySuggestions(city);
+  const {
+    weather,
+    isLoading,
+    error,
+    loadWeatherByCity,
+    loadWeatherByLocation,
+  } = useWeather();
 
   const colorScheme = useColorScheme();
   const styles =
@@ -45,76 +39,13 @@ export default function CurrentWeatherCard() {
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
   const insets = useSafeAreaInsets();
 
-  async function handleSearch(cityName?: string) {
-    const name = cityName ?? city.trim();
-    if (!name) return;
-    setIsLoading(true);
-    const { data, error } = await getCurrentWeatherByCity(name);
-    setWeather(data);
-    setError(error);
-    setIsLoading(false);
-    if (data) setCitySearchVisible(false);
-  }
-
-  const handleCitySelect = async (city: CitySuggestion) => {
-    setSelectedCity(city);
-    setCitySuggestions([]);
-    setCitySearchVisible(false);
-
-    const fullName = [city.city, city.region, city.country]
-      .filter(Boolean)
-      .join(", ");
-    setCity(fullName);
-
-    setIsLoading(true);
-    const { data, error } = await getCurrentWeatherByCity(fullName);
-    setWeather(data);
-    setError(error);
-    setIsLoading(false);
-  };
-
-  async function loadWeatherByLocation() {
-    setIsLoading(true);
-    const { data, error } = await getCurrentWeatherByLocation();
-    setWeather(data);
-    setError(error);
-    setIsLoading(false);
-  }
-
   useEffect(() => {
-    if (city.length < 2) {
-      setCitySuggestions([]);
-      return;
+    if (selectedCity) {
+      loadWeatherByCity(selectedCity);
+    } else {
+      loadWeatherByLocation();
     }
-
-    const handler = setTimeout(() => {
-      const fetchSuggestions = async () => {
-        setFetchCitySuggestions(true);
-        try {
-          const response = await fetch(
-            `http://192.168.178.67:3000/api/cities?q=${encodeURIComponent(
-              city
-            )}`
-          );
-          if (!response.ok) throw new Error("Fehler beim Laden der Vorschläge");
-          const data: CitySuggestion[] = await response.json();
-          setCitySuggestions(data);
-        } catch (e) {
-          setCitySuggestions([]);
-        } finally {
-          setFetchCitySuggestions(false);
-        }
-      };
-
-      fetchSuggestions();
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [city]);
-
-  useEffect(() => {
-    loadWeatherByLocation();
-  }, []);
+  }, [selectedCity]);
 
   return (
     <View
@@ -124,73 +55,9 @@ export default function CurrentWeatherCard() {
         backgroundColor: colors.background,
       }}
     >
-      {citySearchVisible && (
-        <View style={{ padding: 16 }}>
-          <TextInput
-            placeholder="Stadt eingeben"
-            value={city}
-            onChangeText={setCity}
-            placeholderTextColor="#aaa"
-            onFocus={() => {
-              if (city.length > 0) {
-                setCity("");
-              }
-            }}
-            style={{
-              backgroundColor: colors.card,
-              color: colors.text,
-              padding: 10,
-              borderRadius: 8,
-              marginBottom: 8,
-              borderColor: colors.border,
-              borderWidth: 1,
-            }}
-          />
-
-          {fetchCitySuggestions && (
-            <Text style={{ color: colors.text, marginBottom: 8 }}>
-              Lade Vorschläge...
-            </Text>
-          )}
-          {!fetchCitySuggestions && citySuggestion.length > 0 && (
-            <FlatList
-              data={citySuggestion}
-              keyExtractor={(item, index) =>
-                item.id ? item.id.toString() : index.toString()
-              }
-              style={{
-                maxHeight: 200,
-                marginBottom: 8,
-                backgroundColor: colors.card,
-                borderRadius: 8,
-              }}
-              keyboardShouldPersistTaps="handled"
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => handleCitySelect(item)}
-                  style={{
-                    padding: 10,
-                    borderBottomColor: colors.border,
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.detail}>
-                    {[item.city, item.region, item.country]
-                      .filter(Boolean)
-                      .join(", ")}
-                  </Text>
-                </Pressable>
-              )}
-            />
-          )}
-
-          <Button title="Suchen" onPress={() => handleSearch()} />
-        </View>
-      )}
-
       {isLoading && (
         <View style={{ padding: 16 }}>
-          <Text style={{ color: colors.text }}>loading...</Text>
+          <Text style={{ color: colors.text }}>Lade Wetterdaten...</Text>
         </View>
       )}
 
@@ -204,28 +71,95 @@ export default function CurrentWeatherCard() {
         <View style={styles.container}>
           <View style={styles.locationContainer}>
             <View style={styles.locationTextContainer}>
-              <Pressable onPress={() => setCitySearchVisible(true)}>
-                <View style={styles.cityRow}>
-                  <Text style={styles.location}>
-                    {selectedCity?.city ?? weather.city}
-                  </Text>
-
-                  <FontAwesome name="pencil" style={styles.editIcon} />
-                </View>
-
-                <Text style={styles.locationDetails}>
-                  {(selectedCity?.region ?? weather.region) +
-                    ", " +
-                    (selectedCity?.country ?? weather.country)}
-                </Text>
-              </Pressable>
+              <View style={styles.cityRow}>
+                {editCity ? (
+                  <View style={{ position: "relative" }}>
+                    <TextInput
+                      style={{
+                        fontSize: 24,
+                        color: colors.text,
+                        width: "100%",
+                      }}
+                      value={city}
+                      onChangeText={setCity}
+                      placeholder={weather.city}
+                      placeholderTextColor="#aaa"
+                      autoFocus
+                      returnKeyType="done"
+                      onSubmitEditing={() => {
+                        const bestMatch = suggestions[0]?.city || city;
+                        setSelectedCity(bestMatch);
+                        setCity(bestMatch);
+                        setEditCity(false);
+                      }}
+                    />
+                    <FlatList
+                      scrollEnabled={false}
+                      data={suggestions}
+                      keyExtractor={(item, index) =>
+                        item.id ? item.id.toString() : index.toString()
+                      }
+                      style={{
+                        marginBottom: 8,
+                        backgroundColor: colors.card,
+                        borderRadius: 8,
+                        zIndex: 1000,
+                      }}
+                      keyboardShouldPersistTaps="handled"
+                      renderItem={({ item }) => (
+                        <Pressable
+                          onPress={() => {
+                            setCity(item.city);
+                            setSelectedCity(item.city);
+                            setEditCity(false);
+                          }}
+                          style={{
+                            padding: 10,
+                            borderBottomColor: colors.border,
+                            borderBottomWidth: 1,
+                          }}
+                        >
+                          <Text style={styles.detail}>
+                            {[item.city, item.region, item.country]
+                              .filter(Boolean)
+                              .join(", ")}
+                          </Text>
+                        </Pressable>
+                      )}
+                    />
+                  </View>
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      setCity("");
+                      setEditCity(true);
+                    }}
+                    style={styles.cityRow}
+                  >
+                    <Text style={styles.location}>{weather?.city}</Text>
+                    <FontAwesome name="pencil" style={styles.editIcon} />
+                  </Pressable>
+                )}
+              </View>
+              <Text style={styles.locationDetails}>
+                {[weather.region, weather.country].filter(Boolean).join(", ")}
+              </Text>
             </View>
-            <Ionicons
-              name="add-circle-outline"
-              size={32}
-              style={styles.addIcon}
-            />
+            {!editCity ? (
+              <Ionicons
+                name="add-circle-outline"
+                size={32}
+                style={styles.addIcon}
+              />
+            ) : (
+              <Ionicons
+                name="add-circle-outline"
+                size={32}
+                color="transparent"
+              />
+            )}
           </View>
+
           <View style={styles.conditionContainer}>
             <Image
               source={{ uri: `https:${weather.iconUrl}` }}

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { darkThemeColors as colors } from "@/theme/darkThemeColors";
+import { lightThemeColors as colors } from "@/theme/lightThemeColors";
 
-export const darkThemeStyles = StyleSheet.create({
+export const lightThemeStyles = StyleSheet.create({
     container: {
         margin: 16,
         padding: 20,

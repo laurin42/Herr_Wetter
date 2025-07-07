@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { getCurrentWeatherByCity, getCurrentWeatherByLocation, WeatherData } from "@/services/weatherService";
 
 export function useWeather() {
@@ -7,21 +7,23 @@ export function useWeather() {
     const [error, setError] = useState<string | null>(null);
 
 
-    async function loadWeatherByLocation() {
+    const loadWeatherByLocation = useCallback(async () =>  {
         setIsLoading(true);
         const { data, error } = await getCurrentWeatherByLocation();
         setWeather(data);
         setError(error);
         setIsLoading(false);
-    }
+        }, []) 
 
-        async function loadWeatherByCity(city: string) {
+        const loadWeatherByCity = useCallback(async (city:string) =>  {
         setIsLoading(true);
         const { data, error } = await getCurrentWeatherByCity(city);
         setWeather(data);
         setError(error);
         setIsLoading(false);
-    }
+        }, []) 
+       
+
 
     return {
         weather,

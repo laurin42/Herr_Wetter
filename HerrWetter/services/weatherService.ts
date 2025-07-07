@@ -55,6 +55,8 @@ export async function getCurrentWeatherByLocation(): Promise<{
   error: string | null;
   data: WeatherData | null;
 }> {
+
+
   try {
     const resolved = await resolveLocation();
     const coords = resolved.location;
@@ -77,6 +79,8 @@ export async function getCurrentWeatherByCity(city: string): Promise<{
   error: string | null;
   data: WeatherData | null;
 }> {
+
+  
   try {
     const resolved = await resolveLocation(city);
     const coords = resolved.location;

@@ -32,9 +32,11 @@ export const lightWeatherStyles = StyleSheet.create({
         alignItems: "flex-start",
     },
     locationDetails: {
+        flexDirection: "row",
         fontSize: 12,
         color: colors.textSecondary,
     },
+
     conditionContainer: {
         display: "flex",
         flexDirection: "row",
@@ -47,6 +49,7 @@ export const lightWeatherStyles = StyleSheet.create({
         justifyContent: "center",
         marginLeft: 12,
         position: "relative",
+        flexShrink: 1,
     },
     condition: {
         fontSize: 16,
@@ -64,6 +67,14 @@ export const lightWeatherStyles = StyleSheet.create({
         color: colors.text,
         marginBottom: 4,
     },
+    textInput: {
+        backgroundColor: colors.card,
+        color: colors.text,
+        padding: 10,
+        borderRadius: 8,
+        borderColor: colors.border,
+        borderWidth: 1,
+    },
     weatherIcon: {
         width: 100,
         height: 100,
@@ -76,7 +87,8 @@ export const lightWeatherStyles = StyleSheet.create({
         fontSize: 12,
         color: colors.ui.buttonPrimary,
         marginTop: 2,
-        marginLeft: 8,
+        right: -16,
+        position: "absolute",
     },
     temp: {
         fontSize: 40,
