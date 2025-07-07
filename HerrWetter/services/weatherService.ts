@@ -1,5 +1,6 @@
 import { resolveLocation, Coordinates } from "@/utils/resolveLocation";
 
+//type definitions are named identical to response fields from forecast/WeatherAPI.com
 export type WeatherData = {
   temperature: number;
   feelslikeC: number;

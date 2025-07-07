@@ -56,9 +56,21 @@ export default function CurrentWeatherCard() {
     if (data) setCitySearchVisible(false);
   }
 
-  const handleCitySelect = (city: CitySuggestion) => {
+  const handleCitySelect = async (city: CitySuggestion) => {
     setSelectedCity(city);
+    setCitySuggestions([]);
     setCitySearchVisible(false);
+
+    const fullName = [city.city, city.region, city.country]
+      .filter(Boolean)
+      .join(", ");
+    setCity(fullName);
+
+    setIsLoading(true);
+    const { data, error } = await getCurrentWeatherByCity(fullName);
+    setWeather(data);
+    setError(error);
+    setIsLoading(false);
   };
 
   async function loadWeatherByLocation() {
@@ -155,24 +167,7 @@ export default function CurrentWeatherCard() {
               keyboardShouldPersistTaps="handled"
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={async () => {
-                    setSelectedCity(item);
-                    setCitySuggestions([]);
-                    setCitySearchVisible(false);
-
-                    const fullName = [item.city, item.region, item.country]
-                      .filter(Boolean)
-                      .join(", ");
-                    setCity(fullName);
-
-                    setIsLoading(true);
-                    const { data, error } = await getCurrentWeatherByCity(
-                      fullName
-                    );
-                    setWeather(data);
-                    setError(error);
-                    setIsLoading(false);
-                  }}
+                  onPress={() => handleCitySelect(item)}
                   style={{
                     padding: 10,
                     borderBottomColor: colors.border,
