@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView, useColorScheme } from "react-native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import CurrentWeatherCard from "@/components/currentWeatherCard";
+import {
+  SafeAreaView,
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { darkThemeColors } from "@/theme/darkThemeColors";
 import { lightThemeColors } from "@/theme/lightThemeColors";
+import CurrentWeatherCard from "@/components/currentWeatherCard";
+import { useCitySuggestions } from "@/hooks/useCitySuggestions";
+import LocationSelector from "@/components/location/locationSelector";
+import { useWeather } from "@/hooks/useWeather";
 
 export default function WeatherScreen() {
-  const router = useRouter();
   const [refreshing, setRefreshing] = React.useState(false);
+  const [city, setCity] = useState("");
+  const [editCity, setEditCity] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const { suggestions, isLoading: isLoadingSuggestions } =
+    useCitySuggestions(city);
 
   const colorScheme = useColorScheme();
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
+  const insets = useSafeAreaInsets();
+
+  const {
+    weather,
+    isLoading,
+    error,
+    loadWeatherByCity,
+    loadWeatherByLocation,
+  } = useWeather();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -20,20 +39,44 @@ export default function WeatherScreen() {
     }, 2000);
   }, []);
 
+  React.useEffect(() => {
+    if (selectedCity) {
+      loadWeatherByCity(selectedCity);
+    } else {
+      loadWeatherByLocation();
+    }
+  }, [selectedCity]);
+
   return (
-    <SafeAreaProvider
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-      }}
-    >
-      <SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          paddingTop: insets.top,
+        }}
+      >
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-          <CurrentWeatherCard />
+          <LocationSelector
+            city={city}
+            setCity={setCity}
+            editCity={editCity}
+            setEditCity={setEditCity}
+            suggestions={suggestions}
+            setSelectedCity={setSelectedCity}
+            weather={weather}
+          />
+
+          <CurrentWeatherCard
+            selectedCity={selectedCity}
+            weather={weather}
+            isLoading={isLoading}
+            error={error}
+          />
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -7,7 +7,6 @@ export type CitySuggestion = {
   id: number;
 };
 
-
 export function useCitySuggestions(city: string) {
     const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +35,9 @@ export function useCitySuggestions(city: string) {
           setIsLoading(false);
         }
       };
-
       fetchSuggestions();
     }, 50);
-
     return () => clearTimeout(handler);
   }, [city]);
-
 return { suggestions, isLoading }
 }

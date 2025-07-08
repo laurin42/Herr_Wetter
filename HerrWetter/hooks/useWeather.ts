@@ -7,7 +7,7 @@ export function useWeather() {
     const [error, setError] = useState<string | null>(null);
 
 
-    const loadWeatherByLocation = useCallback(async () =>  {
+    const loadWeatherByLocation = useCallback(async (latitude?: number, longitude?: number) =>  {
         setIsLoading(true);
         const { data, error } = await getCurrentWeatherByLocation();
         setWeather(data);
