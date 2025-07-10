@@ -1,5 +1,6 @@
 export const darkThemeColors = {
   background: "#0A1A2F",
+  backgroundSecondary: "#102840",
   card: "#102840",
   text: "#FFFFFF",
   textSecondary: "#AFC6E0",

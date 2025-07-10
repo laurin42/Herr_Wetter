@@ -6,23 +6,26 @@ export const locationSelectorLight = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.card,
-        elevation: 10,
-        position: "absolute",
-    },    
+        backgroundColor: colors.backgroundSecondary,
+        maxHeight: 200,
+        position: "relative",
+
+    },       
     locationContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         paddingBottom: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
+
     },
     locationTextContainer: {
+        justifyContent: "flex-start",
         flexDirection: "column",
     },
     location: {
+        minHeight: 40,
+        paddingVertical: 8,
         display: "flex",
         fontSize: 24,
         color: colors.text,
@@ -33,13 +36,15 @@ export const locationSelectorLight = StyleSheet.create({
         justifyContent: "space-between",
     },
     locationDetails: {
-        fontSize: 12,
+        fontSize: 14,
         color: colors.textSecondary,
     },
     searchIcon: {
+        fontSize: 42,
         color: colors.ui.buttonPrimary,
     },
     locationIcon: {
+        fontSize: 42,
         color: colors.ui.buttonPrimary,
     },
     locationIcons: {
@@ -49,7 +54,7 @@ export const locationSelectorLight = StyleSheet.create({
         flexDirection: "row",
         gap: 12,
     },
-      suggestionOverlay: {
+    suggestionOverlay: {
         position: "absolute",
         top: 50,
         left: 0,
@@ -61,5 +66,5 @@ export const locationSelectorLight = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-    },
-      });
+        },
+    });

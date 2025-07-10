@@ -29,9 +29,8 @@ export default function LocationSuggestionList({
 
   const { height: windowHeight } = useWindowDimensions();
   const maxHeight = Math.min(suggestions.length * 96, windowHeight * 0.7);
-
   return (
-    <View style={[style, { maxHeight }]}>
+    <View style={[style, { maxHeight, minHeight: 140 }]}>
       <FlatList
         scrollEnabled
         data={suggestions}
@@ -52,7 +51,9 @@ export default function LocationSuggestionList({
               onPress={() => onSelect(item.city)}
               style={[
                 styles.suggestionItem,
-                (isLast || isOnlyItem) && { borderBottomWidth: 0 },
+                (isLast || isOnlyItem) && {
+                  borderBottomWidth: 0,
+                },
               ]}
             >
               <Ionicons name="location" size={16} style={styles.locationIcon} />

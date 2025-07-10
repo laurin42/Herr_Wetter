@@ -5,6 +5,9 @@ import { darkWeatherStyles } from "@/styles/currentWeatherDark";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { darkThemeColors } from "@/theme/darkThemeColors";
 import LinearGradient from "react-native-linear-gradient";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type CurrentWeatherCardProps = {
   selectedCity: string | null;
@@ -25,7 +28,12 @@ export default function CurrentWeatherCard({
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[colors.backgroundSecondary, colors.background]}
+      start={{ x: 0.9, y: 0 }}
+      end={{ x: 0.9, y: 1 }}
+      style={styles.container}
+    >
       {isLoading && (
         <View style={{ padding: 16 }}>
           <Text style={{ color: colors.text }}>Lade Wetterdaten...</Text>
@@ -40,12 +48,8 @@ export default function CurrentWeatherCard({
 
       {weather && (
         <View style={styles.contentWrapper}>
-          <LinearGradient
-            colors={["#102840", "#0A1A2F"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.topSection}
-          >
+          <Text style={styles.cardTitle}>Aktuell:</Text>
+          <View style={styles.topSection}>
             <Image
               source={{ uri: `https:${weather.iconUrl}` }}
               style={styles.weatherIcon}
@@ -55,25 +59,48 @@ export default function CurrentWeatherCard({
               <Text style={styles.temp}>{weather.temperature}°C</Text>
               <Text style={styles.condition}>{weather.condition}</Text>
             </View>
-          </LinearGradient>
+          </View>
 
-          <View style={styles.detailGrid}>
-            <View style={styles.detailColumn}>
-              <Text style={styles.detail}>gefühlt: {weather.feelslikeC}°C</Text>
-              <Text style={styles.detail}>
+          <View style={styles.iconGrid}>
+            <View style={styles.tile}>
+              <FontAwesome6
+                name="temperature-low"
+                size={24}
+                color={colors.ui.buttonSecondary}
+              />
+              <Text style={styles.tileText}>
+                gefühlt: {weather.feelslikeC}°C
+              </Text>
+            </View>
+            <View style={styles.tile}>
+              <FontAwesome5
+                name="tint"
+                size={24}
+                color={colors.ui.buttonSecondary}
+              />
+              <Text style={styles.tileText}>
                 Niederschlag: {weather.precipMm}mm
               </Text>
-              <Text style={styles.detail}>UV-Index: {weather.uv}</Text>
             </View>
-            <View style={styles.detailColumn}>
-              <Text style={styles.detail}>Wind: {weather.windKph} km/h</Text>
-              <Text style={styles.detail}>
-                Richtung: {weather.windDegree}, {weather.windDirection}
-              </Text>
+            <View style={styles.tile}>
+              <MaterialCommunityIcons
+                name="sun-wireless-outline"
+                size={24}
+                color={colors.ui.buttonSecondary}
+              />
+              <Text style={styles.tileText}>UV-Index: {weather.uv}</Text>
+            </View>
+            <View style={styles.tile}>
+              <FontAwesome6
+                name="wind"
+                size={24}
+                color={colors.ui.buttonSecondary}
+              />
+              <Text style={styles.tileText}>Wind: {weather.windKph} km/h</Text>
             </View>
           </View>
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 }

@@ -18,8 +18,7 @@ export const locationSelectorDark = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingBottom: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
+
     },
     locationTextContainer: {
         justifyContent: "flex-start",
@@ -38,7 +37,7 @@ export const locationSelectorDark = StyleSheet.create({
         justifyContent: "space-between",
     },
     locationDetails: {
-        fontSize: 12,
+        fontSize: 14,
         color: colors.textSecondary,
     },
     searchIcon: {

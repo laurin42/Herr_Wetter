@@ -28,16 +28,20 @@ export const lightWeatherStyles = StyleSheet.create({
         position: "relative",
         flexShrink: 1,
     },
+    cardTitle: {
+        fontSize: 24,
+        color: colors.text
+    },    
     condition: {
         fontSize: 16,
         color: colors.text,
     },
     details: {
-         fontSize: 14,
-         color: colors.text,
-         borderTopWidth: 1,
-         borderTopColor: colors.border,
-         paddingVertical: 12,
+        fontSize: 14,
+        color: colors.text,
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+        paddingVertical: 12,
     },
     detail: {
         fontSize: 14,
@@ -72,24 +76,41 @@ export const lightWeatherStyles = StyleSheet.create({
         color: colors.text,
     },
     contentWrapper: {
-    flexDirection: "column",
-    gap: 16,
+        flexDirection: "column",
+        gap: 16,
     },
-
     topSection: {
-    flexDirection: "row",
-    alignItems: "center",
+        flexDirection: "row",
+        alignItems: "center",
     },
-
     detailGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 12,
     },
-
     detailColumn: {
-    flex: 1,
-    flexDirection: "column",
-    gap: 6,
+        flex: 1,
+        flexDirection: "column",
+        gap: 6,
+    },
+    iconGrid : {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+        marginTop: 16,
+    },
+    tile: {
+        width: "48%",
+        backgroundColor: "rgba(19, 126, 158, 0.8)",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 12,
+        alignItems: "center",
+    },
+    tileText: {
+        color: "white",
+        marginTop: 8,
+        fontSize: 14,
+        textAlign: "center",
     },
     });

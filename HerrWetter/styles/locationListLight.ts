@@ -8,36 +8,37 @@ export const locationListLight = StyleSheet.create({
       backgroundColor: colors.card,
       borderRadius: 8,
       zIndex: 1000,
+      position: "relative",
     },
-    textContainer:{
-        flexDirection: "column",
-    },  
+    suggestionItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
     headerText: {
       fontSize: 16,
       fontWeight: "bold",
       marginHorizontal: 20,
       paddingVertical: 16,
       color: colors.textSecondary,
-    },      
-    suggestionItem: {
-      padding: 10,
     },
-    suggestionText: {
-      color: colors.text,
-      position: "relative",
-    },
+    textContainer:{
+        flexDirection: "column",
+    },    
     cityText: {
       color: colors.text,
       fontWeight: "bold",
       position: "relative",
-      marginHorizontal: 16,
+      marginBottom: 4,
     },
     detailText: {
         color: colors.textSecondary,
     },
     locationIcon: {
         color: colors.ui.buttonSecondary,
-        position: "absolute",
-        marginHorizontal: 8,
+        marginRight: 12,
     }
   });
