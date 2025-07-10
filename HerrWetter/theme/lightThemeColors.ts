@@ -19,6 +19,7 @@ export const lightThemeColors = {
 
   ui: {
     buttonPrimary: "#003366",
+    buttonSecondary: "#E0E6ED",
     hover: "#00509E",
     active: "#002244",
     error: "#DC2626",

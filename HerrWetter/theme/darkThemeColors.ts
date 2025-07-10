@@ -19,6 +19,7 @@ export const darkThemeColors = {
 
   ui: {
     buttonPrimary: "#3B5998",
+    buttonSecondary: "#5A7D9A", 
     hover: "#5679B4",
     active: "#FFFFFF",
     error: "#EF4444",

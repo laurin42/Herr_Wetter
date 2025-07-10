@@ -8,6 +8,7 @@ export const locationSelectorLight = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: colors.card,
         elevation: 10,
+        position: "absolute",
     },    
     locationContainer: {
         display: "flex",
@@ -28,21 +29,37 @@ export const locationSelectorLight = StyleSheet.create({
     },
     cityRow: {
         flexDirection: "row",
-        alignItems: "flex-start",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     locationDetails: {
-        flexDirection: "row",
         fontSize: 12,
         color: colors.textSecondary,
     },
-    addIcon: {
-        color: colors.ui.buttonPrimary,
-            },
-    editIcon: {
-        fontSize: 12,
-        color: colors.ui.buttonPrimary,
-        marginTop: 2,
-        right: -16,
-        position: "absolute",
+        searchIcon: {
+            color: colors.ui.buttonPrimary,
         },
-    });
+        locationIcon: {
+            color: colors.ui.buttonPrimary,
+        },
+    locationIcons: {
+        position: "absolute",
+        top: -8,
+        right: 0,
+        flexDirection: "row",
+        gap: 12,
+    },
+      suggestionOverlay: {
+        position: "absolute",
+        top: 50,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        backgroundColor: colors.card,
+        borderRadius: 8,
+        elevation: 8, 
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+    },
+      });

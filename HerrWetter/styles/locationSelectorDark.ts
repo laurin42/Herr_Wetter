@@ -8,6 +8,9 @@ export const locationSelectorDark = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: colors.card,
         elevation: 10,
+        maxHeight: 200,
+        position: "relative",
+
     },       
     locationContainer: {
         display: "flex",
@@ -23,6 +26,8 @@ export const locationSelectorDark = StyleSheet.create({
         flexDirection: "column",
     },
     location: {
+        minHeight: 40,
+        paddingVertical: 8,
         display: "flex",
         fontSize: 24,
         color: colors.text,
@@ -30,19 +35,38 @@ export const locationSelectorDark = StyleSheet.create({
     cityRow: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between",
     },
     locationDetails: {
         fontSize: 12,
         color: colors.textSecondary,
     },
-    addIcon: {
+    searchIcon: {
+        fontSize: 42,
         color: colors.ui.buttonPrimary,
     },
-    editIcon: {
-        fontSize: 12,
+    locationIcon: {
+        fontSize: 42,
         color: colors.ui.buttonPrimary,
-        top: 0,
-        right: -16,
+    },
+    locationIcons: {
         position: "absolute",
+        top: -8,
+        right: 0,
+        flexDirection: "row",
+        gap: 12,
     },
+    suggestionOverlay: {
+        position: "absolute",
+        top: 50,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        backgroundColor: colors.card,
+        borderRadius: 8,
+        elevation: 8, 
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        },
     });

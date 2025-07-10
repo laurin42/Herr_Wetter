@@ -1,7 +1,14 @@
 import React from "react";
-import { Text, TextInput, View, Pressable, useColorScheme } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  useColorScheme,
+  Platform,
+} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import LocationSuggestionList from "./locationSuggestionList";
 import { CitySuggestion } from "@/hooks/useCitySuggestions";
 import { locationSelectorDark } from "@/styles/locationSelectorDark";
@@ -47,25 +54,25 @@ export default function LocationSelector({
       <View style={styles.locationContainer}>
         <View style={styles.locationTextContainer}>
           {editCity ? (
-            <View style={{ width: "100%" }}>
+            <View style={{ width: "100%", position: "relative" }}>
               <TextInput
+                onFocus={(e) => {
+                  if (Platform.OS === "web") {
+                    e.preventDefault();
+                  }
+                }}
                 style={styles.location}
                 value={city}
                 onChangeText={setCity}
-                placeholder="Stadt eingeben"
+                placeholder={weather.city}
                 placeholderTextColor="#aaa"
                 returnKeyType="done"
                 onSubmitEditing={handleSubmit}
                 autoFocus={true}
               />
-              {suggestions.length > 0 && (
-                <View style={{ marginTop: 6 }}>
-                  <LocationSuggestionList
-                    suggestions={suggestions}
-                    onSelect={handleSelectSuggestion}
-                  />
-                </View>
-              )}
+              <Text style={styles.locationDetails}>
+                {`${weather?.region}, ${weather?.country}`}
+              </Text>
             </View>
           ) : (
             <View style={styles.cityRow}>
@@ -74,28 +81,32 @@ export default function LocationSelector({
                   setEditCity(true);
                   setTimeout(() => setCity(""), 10);
                 }}
-                style={styles.cityRow}
               >
                 <Text style={styles.location}>{weather?.city}</Text>
-                <FontAwesome name="pencil" style={styles.editIcon} />
               </Pressable>
             </View>
           )}
-          <Text style={styles.locationDetails}>
-            {editCity && suggestions.length > 0
-              ? `${suggestions[0].city}, ${suggestions[0].region}, ${suggestions[0].country}`
-              : `${weather?.city}, ${weather?.region}, ${weather?.country}`}
-          </Text>
+          {!editCity && (
+            <Text style={styles.locationDetails}>
+              {`${weather?.region}, ${weather?.country}`}
+            </Text>
+          )}
         </View>
-        {!editCity ? (
-          <Ionicons
-            name="add-circle-outline"
+        <Pressable
+          onPress={() => {
+            setEditCity(true);
+            setTimeout(() => setCity(""), 10);
+          }}
+        >
+          <Ionicons name="search-sharp" size={32} style={styles.searchIcon} />
+        </Pressable>
+        <Pressable>
+          <MaterialIcons
+            name="gps-fixed"
             size={32}
-            style={styles.addIcon}
+            style={styles.locationIcon}
           />
-        ) : (
-          <Ionicons name="add-circle-outline" size={32} color="transparent" />
-        )}
+        </Pressable>
       </View>
     </View>
   );
