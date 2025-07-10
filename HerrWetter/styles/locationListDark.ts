@@ -17,6 +17,13 @@ export const locationListDark = StyleSheet.create({
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
+    headerText: {
+      fontSize: 16,
+      fontWeight: "bold",
+      marginHorizontal: 20,
+      paddingVertical: 16,
+      color: colors.textSecondary,
+    },
     textContainer:{
         flexDirection: "column",
     },    

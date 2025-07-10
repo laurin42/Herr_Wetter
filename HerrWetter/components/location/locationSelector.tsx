@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   TextInput,
   View,
   Pressable,
   useColorScheme,
-  Platform,
+  ActivityIndicator,
 } from "react-native";
+import * as Location from "expo-location";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import LocationSuggestionList from "./locationSuggestionList";
 import { CitySuggestion } from "@/hooks/useCitySuggestions";
 import { locationSelectorDark } from "@/styles/locationSelectorDark";
 import { locationSelectorLight } from "@/styles/locationSelectorLight";
+import { resolveLocation } from "@/utils/resolveLocation";
 
 type locationSelectorProps = {
   city: string;
@@ -33,6 +34,8 @@ export default function LocationSelector({
   setSelectedCity,
   weather,
 }: locationSelectorProps) {
+  const [loadingLocation, setLoadingLocation] = useState(false);
+
   const colorScheme = useColorScheme();
   const styles =
     colorScheme === "dark" ? locationSelectorDark : locationSelectorLight;
@@ -43,10 +46,23 @@ export default function LocationSelector({
     setCity(bestMatch);
     setEditCity(false);
   };
-  const handleSelectSuggestion = (cityName: string) => {
-    setCity(cityName);
-    setSelectedCity(cityName);
-    setEditCity(false);
+
+  const handleUseCurrentLocation = async () => {
+    if (loadingLocation) return;
+    setLoadingLocation(true);
+    const { location, error } = await resolveLocation();
+    if (location && !error) {
+      const reverseGeocode = await Location.reverseGeocodeAsync(location);
+      if (reverseGeocode.length > 0) {
+        const geoData = reverseGeocode[0];
+        const locationCity =
+          geoData.city || geoData.region || geoData.country || "";
+        setCity(locationCity);
+      }
+    } else {
+      console.warn(error);
+    }
+    setLoadingLocation(false);
   };
 
   return (
@@ -56,17 +72,12 @@ export default function LocationSelector({
           {editCity ? (
             <View style={{ width: "100%", position: "relative" }}>
               <TextInput
-                onFocus={(e) => {
-                  if (Platform.OS === "web") {
-                    e.preventDefault();
-                  }
-                }}
                 style={styles.location}
                 value={city}
                 onChangeText={setCity}
                 placeholder={weather.city}
                 placeholderTextColor="#aaa"
-                returnKeyType="done"
+                returnKeyType="search"
                 onSubmitEditing={handleSubmit}
                 autoFocus={true}
               />
@@ -92,21 +103,32 @@ export default function LocationSelector({
             </Text>
           )}
         </View>
-        <Pressable
-          onPress={() => {
-            setEditCity(true);
-            setTimeout(() => setCity(""), 10);
-          }}
-        >
-          <Ionicons name="search-sharp" size={32} style={styles.searchIcon} />
-        </Pressable>
-        <Pressable>
-          <MaterialIcons
-            name="gps-fixed"
-            size={32}
-            style={styles.locationIcon}
-          />
-        </Pressable>
+        {!editCity && (
+          <Pressable
+            onPress={() => {
+              setEditCity(true);
+              setTimeout(() => setCity(""), 10);
+            }}
+          >
+            <Ionicons name="search-sharp" size={32} style={styles.searchIcon} />
+          </Pressable>
+        )}
+        {editCity && (
+          <Pressable onPress={handleUseCurrentLocation}>
+            {loadingLocation ? (
+              <ActivityIndicator
+                size={32}
+                color={colorScheme === "dark" ? "#fff" : "#16396d"}
+              />
+            ) : (
+              <MaterialIcons
+                name="gps-fixed"
+                size={32}
+                style={styles.locationIcon}
+              />
+            )}
+          </Pressable>
+        )}
       </View>
     </View>
   );

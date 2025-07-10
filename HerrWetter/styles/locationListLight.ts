@@ -11,7 +11,14 @@ export const locationListLight = StyleSheet.create({
     },
     textContainer:{
         flexDirection: "column",
-    },    
+    },  
+    headerText: {
+      fontSize: 16,
+      fontWeight: "bold",
+      marginHorizontal: 20,
+      paddingVertical: 16,
+      color: colors.textSecondary,
+    },      
     suggestionItem: {
       padding: 10,
     },

@@ -4,6 +4,7 @@ import { lightWeatherStyles } from "@/styles/currentWeatherLight";
 import { darkWeatherStyles } from "@/styles/currentWeatherDark";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { darkThemeColors } from "@/theme/darkThemeColors";
+import LinearGradient from "react-native-linear-gradient";
 
 type CurrentWeatherCardProps = {
   selectedCity: string | null;
@@ -39,7 +40,12 @@ export default function CurrentWeatherCard({
 
       {weather && (
         <View style={styles.contentWrapper}>
-          <View style={styles.topSection}>
+          <LinearGradient
+            colors={["#102840", "#0A1A2F"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.topSection}
+          >
             <Image
               source={{ uri: `https:${weather.iconUrl}` }}
               style={styles.weatherIcon}
@@ -49,7 +55,7 @@ export default function CurrentWeatherCard({
               <Text style={styles.temp}>{weather.temperature}°C</Text>
               <Text style={styles.condition}>{weather.condition}</Text>
             </View>
-          </View>
+          </LinearGradient>
 
           <View style={styles.detailGrid}>
             <View style={styles.detailColumn}>

@@ -35,11 +35,14 @@ export default function LocationSuggestionList({
       <FlatList
         scrollEnabled
         data={suggestions}
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        ListHeaderComponent={() => (
+          <Text style={styles.headerText}>Vorgeschlagene Orte:</Text>
+        )}
         keyExtractor={(item, index) =>
           item.id ? item.id.toString() : index.toString()
         }
-        style={styles.container}
-        keyboardShouldPersistTaps="handled"
         renderItem={({ item, index }) => {
           const isLast = index === suggestions.length - 1;
           const isOnlyItem = suggestions.length === 1;

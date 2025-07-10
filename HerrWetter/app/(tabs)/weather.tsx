@@ -141,7 +141,7 @@ export default function WeatherScreen() {
                 }}
                 style={{
                   position: "absolute",
-                  top: insets.top + windowHeight * 0.22,
+                  top: insets.top + windowHeight * 0.204,
                   left: 16,
                   right: 16,
                   zIndex: 999,

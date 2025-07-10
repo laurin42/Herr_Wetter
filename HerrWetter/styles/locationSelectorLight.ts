@@ -36,12 +36,12 @@ export const locationSelectorLight = StyleSheet.create({
         fontSize: 12,
         color: colors.textSecondary,
     },
-        searchIcon: {
-            color: colors.ui.buttonPrimary,
-        },
-        locationIcon: {
-            color: colors.ui.buttonPrimary,
-        },
+    searchIcon: {
+        color: colors.ui.buttonPrimary,
+    },
+    locationIcon: {
+        color: colors.ui.buttonPrimary,
+    },
     locationIcons: {
         position: "absolute",
         top: -8,
