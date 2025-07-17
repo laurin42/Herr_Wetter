@@ -1,10 +1,11 @@
 export const darkThemeColors = {
-  background: "#0A1A2F",
-  backgroundSecondary: "#102840",
-  card: "#102840",
+  backgroundSecondary: "rgb(15, 20, 37)",
+  background:"rgb(6, 37, 71)",
+  card:"rgb(20, 49, 78)",
+  cardTransparent: "rgba(20, 49, 78, 0.8)",
   text: "#FFFFFF",
   textSecondary: "#AFC6E0",
-  border: "#335577",
+  border:"rgba(51, 85, 119, 0.4)",
 
   weather: {
     sun: "#FFC107",
@@ -26,4 +27,5 @@ export const darkThemeColors = {
     error: "#EF4444",
     succes: "#22C55E",
   },
+
 };

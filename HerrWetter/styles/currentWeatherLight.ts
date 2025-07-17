@@ -7,12 +7,7 @@ export const lightWeatherStyles = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.card,
-        elevation: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
+        backgroundColor: colors.cardTransparent,
         },
     conditionContainer: {
         display: "flex",
@@ -28,10 +23,6 @@ export const lightWeatherStyles = StyleSheet.create({
         position: "relative",
         flexShrink: 1,
     },
-    cardTitle: {
-        fontSize: 24,
-        color: colors.text
-    },    
     condition: {
         fontSize: 16,
         color: colors.text,
@@ -83,6 +74,13 @@ export const lightWeatherStyles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
+    cardTitle: {
+        fontSize: 18,
+        color: colors.text,
+        paddingBottom: 5,
+        borderBottomWidth: 1,
+        borderColor: colors.border,
+    },
     detailGrid: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -101,14 +99,14 @@ export const lightWeatherStyles = StyleSheet.create({
     },
     tile: {
         width: "48%",
-        backgroundColor: "rgba(19, 126, 158, 0.8)",
+        backgroundColor: "rgba(19, 126, 158, 0.1)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
         alignItems: "center",
     },
     tileText: {
-        color: "white",
+        color: colors.textSecondary,
         marginTop: 8,
         fontSize: 14,
         textAlign: "center",

@@ -12,9 +12,11 @@ export type WeatherData = {
   windKph: number;
   uv: number;
   iconUrl: string;
-  city: string;
-  region: string;
-  country: string;
+  location: {
+    city: string;
+    region: string;
+    country: string;
+  }
 };
 
 
@@ -41,9 +43,11 @@ async function fetchWeatherByCoords(coords: Coordinates) {
     windKph: weatherData.current.wind_kph,
     uv: weatherData.current.uv,
     iconUrl: weatherData.current.condition.icon,
-    city: weatherData.location.name,
-    region: weatherData.location.region,
-    country: weatherData.location.country,
+    location:{
+      city: weatherData.location.name,
+      region: weatherData.location.region,
+      country: weatherData.location.country,
+    }
   };
 
   return data;

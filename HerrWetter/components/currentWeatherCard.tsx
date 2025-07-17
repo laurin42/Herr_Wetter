@@ -4,14 +4,14 @@ import { lightWeatherStyles } from "@/styles/currentWeatherLight";
 import { darkWeatherStyles } from "@/styles/currentWeatherDark";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { darkThemeColors } from "@/theme/darkThemeColors";
-import LinearGradient from "react-native-linear-gradient";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { WeatherData } from "@/services/weatherService";
 
 type CurrentWeatherCardProps = {
   selectedCity: string | null;
-  weather: any;
+  weather: WeatherData | null;
   isLoading: boolean;
   error: string | null;
 };
@@ -28,12 +28,7 @@ export default function CurrentWeatherCard({
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
   return (
-    <LinearGradient
-      colors={[colors.backgroundSecondary, colors.background]}
-      start={{ x: 0.9, y: 0 }}
-      end={{ x: 0.9, y: 1 }}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {isLoading && (
         <View style={{ padding: 16 }}>
           <Text style={{ color: colors.text }}>Lade Wetterdaten...</Text>
@@ -48,7 +43,7 @@ export default function CurrentWeatherCard({
 
       {weather && (
         <View style={styles.contentWrapper}>
-          <Text style={styles.cardTitle}>Aktuell:</Text>
+          <Text style={styles.cardTitle}>Aktuell</Text>
           <View style={styles.topSection}>
             <Image
               source={{ uri: `https:${weather.iconUrl}` }}
@@ -101,6 +96,6 @@ export default function CurrentWeatherCard({
           </View>
         </View>
       )}
-    </LinearGradient>
+    </View>
   );
 }

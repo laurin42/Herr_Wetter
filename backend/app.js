@@ -24,57 +24,95 @@ app.get('/api/currentWeather', async (req, res) => {
     const { latitude, longitude } = req.query;
 
     if (!latitude || !longitude) {
-        return res.status(400).json({ error: "latitude und longitute müssen angegeben werden" })
+        return res.status(400).json({ error: "latitude und longitude müssen angegeben werden" });
     }
 
     try {
-        const currentWeather = await fetch(
-            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`
-        )
-        const data = await currentWeather.json();
-        if (data.error) {
-            return res.status(500).json({ error: "Keine daten vorhanden" });
+        const weatherResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`);
+        const weatherData = await weatherResponse.json();
+
+        if (weatherData.error) {
+            return res.status(500).json({ error: "Keine Wetterdaten vorhanden" });
         }
-        res.json(data)
+
+        const username = process.env.GEONAMES_USERNAME;
+        const geoResponse = await fetch(`http://api.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&lang=de&username=${username}`);
+        const geoData = await geoResponse.json();
+
+        let germanLocation = { city: null, region: null, country: null };
+
+        if (geoData.geonames && geoData.geonames.length > 0) {
+            germanLocation = {
+                city: geoData.geonames[0].name,
+                region: geoData.geonames[0].adminName1 ?? null,
+                country: geoData.geonames[0].countryName ?? null,
+            };
+        }
+
+        res.json({
+            ...weatherData,
+            location: {
+                ...weatherData.location,
+                name: germanLocation.city || weatherData.location.name,
+                region: germanLocation.region || weatherData.location.region,
+                country: germanLocation.country || weatherData.location.country,
+            }
+        });
     } catch (error) {
-        return res.status(500).json({ error: "keine daten vorhanden" });
+        res.status(500).json({ error: "Fehler beim Abrufen der Daten" });
     }
 });
 
+
 app.get("/api/cities", async (req, res) => {
     const query = req.query.q?.toString().trim();
+    const latitude = req.query.latitude;
+    const longitude = req.query.longitude;
     const username = process.env.GEONAMES_USERNAME;
 
-    if (!username) return res.status(500).json({ error: "Kein Benutzername gesetzt" });
-
-    if (!query || query.length < 2) {
-        return res.json([]);
+    if (!username) {
+        return res.status(500).json({ error: "Kein Benutzername gesetzt" });
     }
 
-    const isGerman = /^[a-zA-ZäöüßÄÖÜ\s-]+$/.test(query);
-
-    const url = isGerman
-        ? `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&country=DE&featureClass=P&lang=de&maxRows=20&username=${username}`
-        : `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&lang=de&maxRows=10&username=${username}`;
-
-    try {
+    const fetchCities = async (url) => {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data);
-
-        const mapped = (data.geonames || []).map((city) => ({
+        const geonamesList = data.geonames || [];
+        return geonamesList.map((city) => ({
             city: city.name,
             region: city.adminName1 ?? null,
             country: city.countryName ?? null,
             id: city.geonameId,
         }));
-        res.json(mapped);
+
+    };
+
+    try {
+        if (latitude && longitude) {
+            const url = `http://api.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&lang=de&username=${username}`;
+            const result = await fetchCities(url);
+            return res.json(result);
+        }
+
+        if (query && query.length >= 2) {
+            const urlDE = `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&country=DE&featureClass=P&lang=de&maxRows=20&username=${username}`;
+            let result = await fetchCities(urlDE);
+
+            if (result.length === 0) {
+                const urlINT = `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&featureClass=P&lang=de&maxRows=10&username=${username}`;
+                result = await fetchCities(urlINT);
+            }
+
+            return res.json(result);
+        }
+
+        res.json([]);
     } catch (err) {
         console.error("GeoNames Fehler:", err);
         res.status(500).json({ error: "Fehler beim Abrufen von GeoNames" });
     }
-});
 
+});
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`app listening on port ${port}`)

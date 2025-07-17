@@ -6,8 +6,7 @@ export const darkWeatherStyles = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.card,
-        elevation: 10,
+        backgroundColor: colors.cardTransparent,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
@@ -79,8 +78,11 @@ export const darkWeatherStyles = StyleSheet.create({
         alignItems: "center",
     },
     cardTitle: {
-        fontSize: 24,
-        color: colors.text
+        fontSize: 18,
+        color: colors.text,
+        paddingBottom: 5,
+        borderBottomWidth: 1,
+        borderColor: colors.border,
     },
     detailGrid: {
         flexDirection: "row",

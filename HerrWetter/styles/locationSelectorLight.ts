@@ -6,7 +6,7 @@ export const locationSelectorLight = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.backgroundSecondary,
+        backgroundColor: colors.cardTransparent,
         maxHeight: 200,
         position: "relative",
 
@@ -45,7 +45,7 @@ export const locationSelectorLight = StyleSheet.create({
     },
     locationIcon: {
         fontSize: 42,
-        color: colors.ui.buttonPrimary,
+        color: colors.ui.buttonSecondary,
     },
     locationIcons: {
         position: "absolute",
@@ -60,7 +60,7 @@ export const locationSelectorLight = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1000,
-        backgroundColor: colors.card,
+        backgroundColor: colors.cardTransparent,
         borderRadius: 8,
         elevation: 8, 
         shadowOffset: { width: 0, height: 2 },

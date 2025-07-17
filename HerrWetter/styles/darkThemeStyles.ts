@@ -6,14 +6,14 @@ export const darkThemeStyles = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.card,
+        backgroundColor: colors.cardTransparent,
         elevation: 10,
     },
     button: {
         color: colors.ui.buttonPrimary,
     },
     input: {
-        backgroundColor: colors.card,
+        backgroundColor: colors.cardTransparent,
         color: colors.text,
         padding: 10,
         borderRadius: 8,

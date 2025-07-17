@@ -14,6 +14,7 @@ import { CitySuggestion } from "@/hooks/useCitySuggestions";
 import { locationSelectorDark } from "@/styles/locationSelectorDark";
 import { locationSelectorLight } from "@/styles/locationSelectorLight";
 import { resolveLocation } from "@/utils/resolveLocation";
+import { WeatherData } from "@/services/weatherService";
 
 type locationSelectorProps = {
   city: string;
@@ -22,7 +23,8 @@ type locationSelectorProps = {
   setEditCity: (v: boolean) => void;
   suggestions: CitySuggestion[];
   setSelectedCity: (c: string) => void;
-  weather: any;
+  weather: WeatherData | null;
+  containerStyle: any | null;
 };
 
 export default function LocationSelector({
@@ -33,9 +35,9 @@ export default function LocationSelector({
   suggestions,
   setSelectedCity,
   weather,
+  containerStyle,
 }: locationSelectorProps) {
   const [loadingLocation, setLoadingLocation] = useState(false);
-
   const colorScheme = useColorScheme();
   const styles =
     colorScheme === "dark" ? locationSelectorDark : locationSelectorLight;
@@ -66,7 +68,7 @@ export default function LocationSelector({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.locationContainer}>
         <View style={styles.locationTextContainer}>
           {editCity ? (
@@ -75,35 +77,36 @@ export default function LocationSelector({
                 style={styles.location}
                 value={city}
                 onChangeText={setCity}
-                placeholder={weather.city}
+                placeholder={weather?.location.city}
                 placeholderTextColor="#aaa"
                 returnKeyType="search"
                 onSubmitEditing={handleSubmit}
-                autoFocus={true}
+                autoFocus
               />
               <Text style={styles.locationDetails}>
-                {`${weather?.region}, ${weather?.country}`}
+                {`${weather?.location.region}, ${weather?.location.country}`}
               </Text>
             </View>
           ) : (
-            <View style={styles.cityRow}>
-              <Pressable
-                onPress={() => {
-                  setEditCity(true);
-                  setTimeout(() => setCity(""), 10);
-                }}
-              >
-                <Text style={styles.location}>{weather?.city}</Text>
-              </Pressable>
-            </View>
-          )}
-          {!editCity && (
-            <Text style={styles.locationDetails}>
-              {`${weather?.region}, ${weather?.country}`}
-            </Text>
+            <>
+              <View style={styles.cityRow}>
+                <Pressable
+                  onPress={() => {
+                    setEditCity(true);
+                    setTimeout(() => setCity(""), 10);
+                  }}
+                >
+                  <Text style={styles.location}>{weather?.location.city}</Text>
+                </Pressable>
+              </View>
+              <Text style={styles.locationDetails}>
+                {`${weather?.location.region}, ${weather?.location.country}`}
+              </Text>
+            </>
           )}
         </View>
-        {!editCity && (
+
+        {!editCity ? (
           <Pressable
             onPress={() => {
               setEditCity(true);
@@ -112,8 +115,7 @@ export default function LocationSelector({
           >
             <Ionicons name="search-sharp" size={32} style={styles.searchIcon} />
           </Pressable>
-        )}
-        {editCity && (
+        ) : (
           <Pressable onPress={handleUseCurrentLocation}>
             {loadingLocation ? (
               <ActivityIndicator

@@ -6,8 +6,11 @@ export const locationSelectorDark = StyleSheet.create({
         margin: 16,
         padding: 20,
         borderRadius: 12,
-        backgroundColor: colors.card,
-        elevation: 10,
+        backgroundColor: colors.cardTransparent,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
         maxHeight: 200,
         position: "relative",
 

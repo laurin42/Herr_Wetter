@@ -1,10 +1,12 @@
 export const lightThemeColors = {
   background: "#F5F7FA",
-  backgroundSecondary: "rgba(19, 126, 158, 0.8)",
-  card: "#FFFFFF",
-  text: "#1A1A1A",
-  textSecondary: "#4A4A4A",
-  border: "#D1D5DB",
+  backgroundSecondary: "rgba(19, 126, 158, 1)",
+  card:"rgb(245, 250, 255)",
+  cardTransparent:"rgba(245, 250, 255, 0.4)",
+  text:"rgb(31, 111, 156)",
+  textSecondary: "rgb(9, 98, 150)",
+  border:"rgba(0, 34, 68, 0.2)",
+
 
   weather: {
     sun: "#FFA500",
@@ -19,11 +21,12 @@ export const lightThemeColors = {
   },
 
   ui: {
-    buttonPrimary: "#003366",
-    buttonSecondary: "#E0E6ED",
+    buttonPrimary: "rgb(184, 216, 235)",
+    buttonSecondary: "rgb(51, 98, 126)",
     hover: "#00509E",
     active: "#002244",
     error: "#DC2626",
     succes: "#16A34A",
   },
+
 };

@@ -6,8 +6,6 @@ import {
   useWindowDimensions,
   Pressable,
   RefreshControl,
-  Platform,
-  PixelRatio,
 } from "react-native";
 import {
   SafeAreaView,
@@ -22,6 +20,7 @@ import LocationSelector from "@/components/location/locationSelector";
 import LocationSuggestionList from "@/components/location/locationSuggestionList";
 import { useWeather } from "@/hooks/useWeather";
 import { getLocationSelectorHeight } from "@/utils/layout";
+import LinearGradient from "react-native-linear-gradient";
 
 export default function WeatherScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -63,101 +62,116 @@ export default function WeatherScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.background,
-          paddingTop: insets.top,
-        }}
-      >
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <View
-            style={{
-              height: LOCATION_SELECTOR_HEIGHT,
-            }}
-          >
-            {!editCity && (
-              <LocationSelector
-                city={city}
-                setCity={setCity}
-                editCity={editCity}
-                setEditCity={setEditCity}
-                suggestions={suggestions}
-                setSelectedCity={setSelectedCity}
-                weather={weather}
-              />
-            )}
-          </View>
+      <View style={{ flex: 1 }}>
+        <LinearGradient
+          colors={[colors.backgroundSecondary, colors.background]}
+          start={{ x: 1, y: 0.5 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+          }}
+        />
 
-          <CurrentWeatherCard
-            selectedCity={selectedCity}
-            weather={weather}
-            isLoading={isLoading}
-            error={error}
-          />
-        </ScrollView>
-        {editCity && (
-          <Pressable
-            onPress={() => setEditCity(false)}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              zIndex: 998,
-            }}
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: "transparent",
+            paddingTop: insets.top,
+          }}
+        >
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           >
-            <View
+            <View style={{ height: LOCATION_SELECTOR_HEIGHT }}>
+              {!editCity && (
+                <LocationSelector
+                  city={city}
+                  setCity={setCity}
+                  editCity={editCity}
+                  setEditCity={setEditCity}
+                  suggestions={suggestions}
+                  setSelectedCity={setSelectedCity}
+                  weather={weather}
+                  containerStyle={{ backgroundColor: colors.cardTransparent }}
+                />
+              )}
+            </View>
+
+            <CurrentWeatherCard
+              selectedCity={selectedCity}
+              weather={weather}
+              isLoading={isLoading}
+              error={error}
+            />
+          </ScrollView>
+
+          {editCity && (
+            <Pressable
+              onPress={() => setEditCity(false)}
               style={{
-                flex: 1,
                 position: "absolute",
-                width: "100%",
-                marginTop: insets.top + windowHeight * 0.036,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "transparent",
+                zIndex: 10,
               }}
             >
-              <LocationSelector
-                city={city}
-                setCity={setCity}
-                editCity={editCity}
-                setEditCity={setEditCity}
-                suggestions={suggestions}
-                setSelectedCity={setSelectedCity}
-                weather={weather}
-              />
-            </View>
-            {suggestions.length > 0 && (
-              <LocationSuggestionList
-                suggestions={suggestions}
-                onSelect={(cityName: string) => {
-                  setCity(cityName);
-                  setSelectedCity(cityName);
-                  setEditCity(false);
-                }}
+              <View
                 style={{
+                  flex: 1,
                   position: "absolute",
-                  top: insets.top + windowHeight * 0.204,
-                  left: 16,
-                  right: 16,
-                  zIndex: 999,
-                  backgroundColor: colors.card,
-                  borderRadius: 8,
-                  elevation: 8,
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
+                  width: "100%",
+                  top: insets.top + windowHeight * 0.036,
                 }}
-              />
-            )}
-          </Pressable>
-        )}
-      </SafeAreaView>
+              >
+                <LocationSelector
+                  city={city}
+                  setCity={setCity}
+                  editCity={editCity}
+                  setEditCity={setEditCity}
+                  suggestions={suggestions}
+                  setSelectedCity={setSelectedCity}
+                  weather={weather}
+                  containerStyle={{ backgroundColor: colors.card }}
+                />
+              </View>
+              {suggestions.length > 0 && (
+                <LocationSuggestionList
+                  suggestions={suggestions}
+                  onSelect={(cityName: string) => {
+                    setCity(cityName);
+                    setSelectedCity(cityName);
+                    setEditCity(false);
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: insets.top + windowHeight * 0.204,
+                    left: 16,
+                    right: 16,
+                    zIndex: 11,
+                    backgroundColor: colors.card,
+                    borderRadius: 8,
+                    elevation: 8,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                  }}
+                />
+              )}
+            </Pressable>
+          )}
+        </SafeAreaView>
+      </View>
     </SafeAreaProvider>
   );
 }
