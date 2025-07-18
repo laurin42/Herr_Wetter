@@ -11,7 +11,7 @@ export const locationSelectorDark = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        maxHeight: 200,
+        maxHeight: 120,
         position: "relative",
 
     },       
@@ -24,6 +24,7 @@ export const locationSelectorDark = StyleSheet.create({
 
     },
     locationTextContainer: {
+        flexShrink: 1,
         justifyContent: "flex-start",
         flexDirection: "column",
     },
@@ -40,15 +41,16 @@ export const locationSelectorDark = StyleSheet.create({
         justifyContent: "space-between",
     },
     locationDetails: {
+        flexShrink: 1,
         fontSize: 14,
         color: colors.textSecondary,
     },
     searchIcon: {
-        fontSize: 42,
+        fontSize: 32,
         color: colors.ui.buttonPrimary,
     },
     locationIcon: {
-        fontSize: 42,
+        fontSize: 32,
         color: colors.ui.buttonPrimary,
     },
     locationIcons: {

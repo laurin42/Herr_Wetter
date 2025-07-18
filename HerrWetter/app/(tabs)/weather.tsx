@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   ScrollView,
@@ -21,14 +21,18 @@ import LocationSuggestionList from "@/components/location/locationSuggestionList
 import { useWeather } from "@/hooks/useWeather";
 import { getLocationSelectorHeight } from "@/utils/layout";
 import LinearGradient from "react-native-linear-gradient";
+import { Coordinates } from "@/utils/resolveLocation";
 
 export default function WeatherScreen() {
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [city, setCity] = useState("");
   const [editCity, setEditCity] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const { suggestions, isLoading: isLoadingSuggestions } =
-    useCitySuggestions(city);
+  const [selectedCoords, setSelectedCoords] = useState<Coordinates | null>(
+    null
+  );
+  const [displayName, setDisplayName] = useState("");
+
+  const { suggestions } = useCitySuggestions(city);
 
   const colorScheme = useColorScheme();
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
@@ -37,28 +41,18 @@ export default function WeatherScreen() {
   const insets = useSafeAreaInsets();
   const LOCATION_SELECTOR_HEIGHT = getLocationSelectorHeight();
 
-  const {
-    weather,
-    isLoading,
-    error,
-    loadWeatherByCity,
-    loadWeatherByLocation,
-  } = useWeather();
+  const { weather, isLoading, error, loadWeatherByCoords } = useWeather();
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
 
-  React.useEffect(() => {
-    if (selectedCity) {
-      loadWeatherByCity(selectedCity);
-    } else {
-      loadWeatherByLocation();
-    }
-  }, [selectedCity]);
+  useEffect(() => {
+    loadWeatherByCoords(selectedCoords || undefined);
+  }, [selectedCoords, loadWeatherByCoords]);
 
   return (
     <SafeAreaProvider>
@@ -96,8 +90,10 @@ export default function WeatherScreen() {
                   setCity={setCity}
                   editCity={editCity}
                   setEditCity={setEditCity}
+                  setSelectedCoords={setSelectedCoords}
+                  setDisplayName={setDisplayName}
+                  displayName={displayName}
                   suggestions={suggestions}
-                  setSelectedCity={setSelectedCity}
                   weather={weather}
                   containerStyle={{ backgroundColor: colors.cardTransparent }}
                 />
@@ -105,7 +101,6 @@ export default function WeatherScreen() {
             </View>
 
             <CurrentWeatherCard
-              selectedCity={selectedCity}
               weather={weather}
               isLoading={isLoading}
               error={error}
@@ -130,6 +125,7 @@ export default function WeatherScreen() {
                   flex: 1,
                   position: "absolute",
                   width: "100%",
+                  height: LOCATION_SELECTOR_HEIGHT,
                   top: insets.top + windowHeight * 0.036,
                 }}
               >
@@ -138,8 +134,10 @@ export default function WeatherScreen() {
                   setCity={setCity}
                   editCity={editCity}
                   setEditCity={setEditCity}
+                  setSelectedCoords={setSelectedCoords}
+                  setDisplayName={setDisplayName}
+                  displayName={displayName}
                   suggestions={suggestions}
-                  setSelectedCity={setSelectedCity}
                   weather={weather}
                   containerStyle={{ backgroundColor: colors.card }}
                 />
@@ -147,9 +145,10 @@ export default function WeatherScreen() {
               {suggestions.length > 0 && (
                 <LocationSuggestionList
                   suggestions={suggestions}
-                  onSelect={(cityName: string) => {
-                    setCity(cityName);
-                    setSelectedCity(cityName);
+                  onSelect={(coords, displayName) => {
+                    console.log("onSelect received:", coords, displayName);
+                    setSelectedCoords(coords);
+                    setDisplayName(displayName);
                     setEditCity(false);
                   }}
                   style={{

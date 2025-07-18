@@ -24,7 +24,7 @@ export const lightThemeColors = {
     buttonPrimary: "rgb(184, 216, 235)",
     buttonSecondary: "rgb(51, 98, 126)",
     hover: "#00509E",
-    active: "#002244",
+    active: "#00509E",
     error: "#DC2626",
     succes: "#16A34A",
   },

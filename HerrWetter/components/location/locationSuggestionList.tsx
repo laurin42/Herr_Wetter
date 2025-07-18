@@ -12,10 +12,11 @@ import { locationListLight } from "@/styles/locationListLight";
 import { locationListDark } from "@/styles/locationListDark";
 import { ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { resolveLocation, Coordinates } from "@/utils/resolveLocation";
 
 type locSuggestionListProps = {
   suggestions: CitySuggestion[];
-  onSelect: (city: string) => void;
+  onSelect: (coords: Coordinates, displayName: string) => void;
   style?: ViewStyle;
 };
 
@@ -48,7 +49,23 @@ export default function LocationSuggestionList({
 
           return (
             <Pressable
-              onPress={() => onSelect(item.city)}
+              onPress={async () => {
+                console.log("Gewählter Ort:", item.city);
+                const { location, displayName, error } = await resolveLocation(
+                  item.city
+                );
+                console.log(
+                  "ResolveLocation Ergebnis:",
+                  location,
+                  displayName,
+                  error
+                );
+                if (location && displayName) {
+                  onSelect(location, displayName);
+                } else {
+                  console.warn(error);
+                }
+              }}
               style={[
                 styles.suggestionItem,
                 (isLast || isOnlyItem) && {

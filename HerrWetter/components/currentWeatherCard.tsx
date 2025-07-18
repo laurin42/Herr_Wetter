@@ -10,14 +10,12 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { WeatherData } from "@/services/weatherService";
 
 type CurrentWeatherCardProps = {
-  selectedCity: string | null;
   weather: WeatherData | null;
   isLoading: boolean;
   error: string | null;
 };
 
 export default function CurrentWeatherCard({
-  selectedCity,
   weather,
   isLoading,
   error,
@@ -44,15 +42,18 @@ export default function CurrentWeatherCard({
       {weather && (
         <View style={styles.contentWrapper}>
           <Text style={styles.cardTitle}>Aktuell</Text>
+
           <View style={styles.topSection}>
             <Image
-              source={{ uri: `https:${weather.iconUrl}` }}
+              source={{ uri: `https:${weather.current.condition.icon}` }}
               style={styles.weatherIcon}
               resizeMode="contain"
             />
             <View style={styles.conditionTextContainer}>
-              <Text style={styles.temp}>{weather.temperature}°C</Text>
-              <Text style={styles.condition}>{weather.condition}</Text>
+              <Text style={styles.temp}>{weather.current.temp_c}°C</Text>
+              <Text style={styles.condition}>
+                {weather.current.condition.text}
+              </Text>
             </View>
           </View>
 
@@ -64,7 +65,7 @@ export default function CurrentWeatherCard({
                 color={colors.ui.buttonSecondary}
               />
               <Text style={styles.tileText}>
-                gefühlt: {weather.feelslikeC}°C
+                gefühlt: {weather.current.feelslike_c}°C
               </Text>
             </View>
             <View style={styles.tile}>
@@ -74,7 +75,7 @@ export default function CurrentWeatherCard({
                 color={colors.ui.buttonSecondary}
               />
               <Text style={styles.tileText}>
-                Niederschlag: {weather.precipMm}mm
+                Niederschlag: {weather.current.precip_mm}mm
               </Text>
             </View>
             <View style={styles.tile}>
@@ -83,7 +84,9 @@ export default function CurrentWeatherCard({
                 size={24}
                 color={colors.ui.buttonSecondary}
               />
-              <Text style={styles.tileText}>UV-Index: {weather.uv}</Text>
+              <Text style={styles.tileText}>
+                UV-Index: {weather.current.uv}
+              </Text>
             </View>
             <View style={styles.tile}>
               <FontAwesome6
@@ -91,7 +94,9 @@ export default function CurrentWeatherCard({
                 size={24}
                 color={colors.ui.buttonSecondary}
               />
-              <Text style={styles.tileText}>Wind: {weather.windKph} km/h</Text>
+              <Text style={styles.tileText}>
+                Wind: {weather.current.wind_kph} km/h
+              </Text>
             </View>
           </View>
         </View>

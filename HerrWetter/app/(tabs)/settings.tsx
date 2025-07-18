@@ -10,8 +10,6 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { lightSettingsScreen } from "@/styles/lightSettingsScreen";
-import { darkSettingsScreen } from "@/styles/darkSettingsScreen";
 import { lightThemeColors } from "@/theme/lightThemeColors";
 import { darkThemeColors } from "@/theme/darkThemeColors";
 import LinearGradient from "react-native-linear-gradient";

@@ -98,6 +98,7 @@ app.get("/api/cities", async (req, res) => {
             const urlDE = `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&country=DE&featureClass=P&lang=de&maxRows=20&username=${username}`;
             let result = await fetchCities(urlDE);
 
+
             if (result.length === 0) {
                 const urlINT = `http://api.geonames.org/searchJSON?q=${encodeURIComponent(query)}&featureClass=P&lang=de&maxRows=10&username=${username}`;
                 result = await fetchCities(urlINT);

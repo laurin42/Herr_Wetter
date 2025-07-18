@@ -1,9 +1,11 @@
+import { Coordinates } from "@/utils/resolveLocation";
 import { useState, useEffect } from "react";
 
 export type CitySuggestion = {
   city: string;
   region: string;
   country: string;
+  coords: Coordinates;
   id: number;
 };
 
@@ -30,6 +32,7 @@ export function useCitySuggestions(city: string) {
           const data: CitySuggestion[] = await response.json();
           setSuggestions(data);
         } catch (e) {
+          console.error("fehler beim laden der vorschläge", e)
           setSuggestions([]);
         } finally {
           setIsLoading(false);

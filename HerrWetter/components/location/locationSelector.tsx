@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Text,
   TextInput,
@@ -6,25 +6,27 @@ import {
   Pressable,
   useColorScheme,
   ActivityIndicator,
+  Keyboard,
 } from "react-native";
-import * as Location from "expo-location";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { CitySuggestion } from "@/hooks/useCitySuggestions";
 import { locationSelectorDark } from "@/styles/locationSelectorDark";
 import { locationSelectorLight } from "@/styles/locationSelectorLight";
-import { resolveLocation } from "@/utils/resolveLocation";
+import { Coordinates, resolveLocation } from "@/utils/resolveLocation";
 import { WeatherData } from "@/services/weatherService";
 
-type locationSelectorProps = {
+type LocationSelectorProps = {
   city: string;
   setCity: (c: string) => void;
   editCity: boolean;
   setEditCity: (v: boolean) => void;
+  setSelectedCoords: (coords: Coordinates) => void;
+  setDisplayName: (name: string) => void;
+  displayName: string;
   suggestions: CitySuggestion[];
-  setSelectedCity: (c: string) => void;
   weather: WeatherData | null;
-  containerStyle: any | null;
+  containerStyle?: any;
 };
 
 export default function LocationSelector({
@@ -32,35 +34,64 @@ export default function LocationSelector({
   setCity,
   editCity,
   setEditCity,
+  setSelectedCoords,
+  setDisplayName,
+  displayName,
   suggestions,
-  setSelectedCity,
   weather,
   containerStyle,
-}: locationSelectorProps) {
+}: LocationSelectorProps) {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const colorScheme = useColorScheme();
   const styles =
     colorScheme === "dark" ? locationSelectorDark : locationSelectorLight;
 
-  const handleSubmit = () => {
-    const bestMatch = suggestions[0]?.city || city;
-    setSelectedCity(bestMatch);
-    setCity(bestMatch);
+  const textInputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (editCity) {
+      const timer = setTimeout(() => {
+        textInputRef.current?.focus();
+      }, 100);
+
+      return () => clearTimeout(timer);
+    } else {
+      Keyboard.dismiss();
+    }
+  }, [editCity]);
+
+  const handleSubmit = async () => {
+    if (!city.trim()) return;
+    const {
+      location,
+      displayName: resolvedDisplayName,
+      error,
+    } = await resolveLocation(city);
+    if (error || !location) {
+      console.error(error);
+      return;
+    }
+    if (resolvedDisplayName) {
+      setDisplayName(resolvedDisplayName);
+    }
+    setSelectedCoords(location);
     setEditCity(false);
   };
 
   const handleUseCurrentLocation = async () => {
     if (loadingLocation) return;
     setLoadingLocation(true);
-    const { location, error } = await resolveLocation();
+    const {
+      location,
+      displayName: resolvedDisplayName,
+      error,
+    } = await resolveLocation();
     if (location && !error) {
-      const reverseGeocode = await Location.reverseGeocodeAsync(location);
-      if (reverseGeocode.length > 0) {
-        const geoData = reverseGeocode[0];
-        const locationCity =
-          geoData.city || geoData.region || geoData.country || "";
-        setCity(locationCity);
+      if (resolvedDisplayName) {
+        setDisplayName(resolvedDisplayName);
       }
+      setSelectedCoords(location);
+      setEditCity(false);
     } else {
       console.warn(error);
     }
@@ -71,46 +102,51 @@ export default function LocationSelector({
     <View style={[styles.container, containerStyle]}>
       <View style={styles.locationContainer}>
         <View style={styles.locationTextContainer}>
-          {editCity ? (
-            <View style={{ width: "100%", position: "relative" }}>
+          <View style={{ width: "100%", position: "relative" }}>
+            {!editCity ? (
+              <Pressable
+                onPress={() => {
+                  setEditCity(true);
+                  setCity("");
+                }}
+              >
+                <Text style={styles.location}>
+                  {weather?.location.name || displayName || "Standort wählen"}
+                </Text>
+              </Pressable>
+            ) : (
               <TextInput
+                ref={textInputRef}
                 style={styles.location}
                 value={city}
                 onChangeText={setCity}
-                placeholder={weather?.location.city}
+                placeholder={"Ort eingeben..."}
                 placeholderTextColor="#aaa"
                 returnKeyType="search"
                 onSubmitEditing={handleSubmit}
-                autoFocus
+                editable={true}
+                onFocus={() => {
+                  if (city !== "") {
+                    setCity("");
+                  }
+                }}
+                cursorColor={colorScheme === "dark" ? "white" : "#16396d"}
               />
-              <Text style={styles.locationDetails}>
-                {`${weather?.location.region}, ${weather?.location.country}`}
-              </Text>
-            </View>
-          ) : (
-            <>
-              <View style={styles.cityRow}>
-                <Pressable
-                  onPress={() => {
-                    setEditCity(true);
-                    setTimeout(() => setCity(""), 10);
-                  }}
-                >
-                  <Text style={styles.location}>{weather?.location.city}</Text>
-                </Pressable>
-              </View>
-              <Text style={styles.locationDetails}>
-                {`${weather?.location.region}, ${weather?.location.country}`}
-              </Text>
-            </>
-          )}
+            )}
+
+            <Text style={styles.locationDetails}>
+              {`${weather?.location.region ?? ""}, ${
+                weather?.location.country ?? ""
+              }`}
+            </Text>
+          </View>
         </View>
 
         {!editCity ? (
           <Pressable
             onPress={() => {
               setEditCity(true);
-              setTimeout(() => setCity(""), 10);
+              setCity("");
             }}
           >
             <Ionicons name="search-sharp" size={32} style={styles.searchIcon} />
