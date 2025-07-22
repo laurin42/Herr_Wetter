@@ -49,54 +49,67 @@ export default function CurrentWeatherCard({
               style={styles.weatherIcon}
               resizeMode="contain"
             />
-            <View style={styles.conditionTextContainer}>
-              <Text style={styles.temp}>{weather.current.temp_c}°C</Text>
-              <Text style={styles.condition}>
-                {weather.current.condition.text}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.iconGrid}>
-            <View style={styles.tile}>
-              <FontAwesome6
-                name="temperature-low"
-                size={24}
-                color={colors.ui.buttonSecondary}
-              />
-              <Text style={styles.tileText}>
-                gefühlt: {weather.current.feelslike_c}°C
-              </Text>
-            </View>
-            <View style={styles.tile}>
-              <FontAwesome5
-                name="tint"
-                size={24}
-                color={colors.ui.buttonSecondary}
-              />
-              <Text style={styles.tileText}>
-                Niederschlag: {weather.current.precip_mm}mm
-              </Text>
-            </View>
-            <View style={styles.tile}>
-              <MaterialCommunityIcons
-                name="sun-wireless-outline"
-                size={24}
-                color={colors.ui.buttonSecondary}
-              />
-              <Text style={styles.tileText}>
-                UV-Index: {weather.current.uv}
-              </Text>
-            </View>
-            <View style={styles.tile}>
-              <FontAwesome6
-                name="wind"
-                size={24}
-                color={colors.ui.buttonSecondary}
-              />
-              <Text style={styles.tileText}>
-                Wind: {weather.current.wind_kph} km/h
-              </Text>
+            <View style={styles.rightSideContainer}>
+              <View style={styles.conditionTextContainer}>
+                <Text style={styles.temp}>{weather.current.temp_c}°C</Text>
+                <Text style={styles.condition}>
+                  {weather.current.condition.text}
+                </Text>
+              </View>
+              <View style={styles.detailsList}>
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIconWrapper}>
+                    <FontAwesome6
+                      name="temperature-low"
+                      size={24}
+                      color={colors.ui.buttonSecondary}
+                    />
+                  </View>
+                  <Text style={styles.detailText}>
+                    gefühlt: {weather.current.feelslike_c}°C
+                  </Text>
+                </View>
+
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIconWrapper}>
+                    <FontAwesome5
+                      name="tint"
+                      size={24}
+                      color={colors.ui.buttonSecondary}
+                    />
+                  </View>
+                  <Text style={styles.detailText}>
+                    Niederschlag: {weather.current.precip_mm}mm
+                  </Text>
+                </View>
+
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIconWrapper}>
+                    <MaterialCommunityIcons
+                      name="sun-wireless-outline"
+                      size={24}
+                      color={colors.ui.buttonSecondary}
+                    />
+                  </View>
+                  <Text style={styles.detailText}>
+                    UV-Index: {weather.current.uv}
+                  </Text>
+                </View>
+
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIconWrapper}>
+                    <FontAwesome6
+                      name="wind"
+                      size={24}
+                      color={colors.ui.buttonSecondary}
+                    />
+                  </View>
+                  <Text style={styles.detailText}>
+                    Wind: {weather.current.wind_kph} km/h
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>

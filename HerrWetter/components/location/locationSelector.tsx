@@ -135,9 +135,9 @@ export default function LocationSelector({
             )}
 
             <Text style={styles.locationDetails}>
-              {`${weather?.location.region ?? ""}, ${
-                weather?.location.country ?? ""
-              }`}
+              {[weather?.location.region, weather?.location.country]
+                .filter(Boolean)
+                .join(", ")}
             </Text>
           </View>
         </View>

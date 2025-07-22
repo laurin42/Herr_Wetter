@@ -2,11 +2,32 @@ import { StyleSheet } from "react-native";
 import { lightThemeColors as colors } from "@/theme/lightThemeColors";
 
 export const lightWeatherStyles = StyleSheet.create({
+  contentWrapper: {
+    flexDirection: "column",
+    gap: 16,
+  },    
   container: {
     margin: 16,
     padding: 20,
     borderRadius: 12,
     backgroundColor: colors.cardTransparent,
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: colors.text,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderColor: colors.border,
+  },
+  topSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  rightSideContainer: {
+    flexShrink: 1,
+    flexGrow: 1,
+    alignItems: "center",
   },
   conditionContainer: {
     display: "flex",
@@ -14,6 +35,7 @@ export const lightWeatherStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingVertical: 32,
+  
   },
   conditionTextContainer: {
     flexDirection: "column",
@@ -25,26 +47,7 @@ export const lightWeatherStyles = StyleSheet.create({
   condition: {
     fontSize: 16,
     color: colors.text,
-  },
-  details: {
-    fontSize: 14,
-    color: colors.text,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    paddingVertical: 12,
-  },
-  detail: {
-    fontSize: 14,
-    color: colors.text,
-    marginBottom: 4,
-  },
-  textInput: {
-    backgroundColor: colors.card,
-    color: colors.text,
-    padding: 10,
-    borderRadius: 8,
-    borderColor: colors.border,
-    borderWidth: 1,
+    paddingBottom: 12,
   },
   weatherIcon: {
     width: 100,
@@ -65,42 +68,25 @@ export const lightWeatherStyles = StyleSheet.create({
     fontSize: 40,
     color: colors.text,
   },
-  contentWrapper: {
-    flexDirection: "column",
-    gap: 16,
+  detailsList: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingTop: 12,
+    gap: 8,
   },
-  topSection: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  cardTitle: {
-    fontSize: 18,
-    color: colors.text,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderColor: colors.border,
-  },
-
-  iconGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 16,
-  },
-  tile: {
-    flexBasis: "48%",                 
-    aspectRatio: 1,                   
-    backgroundColor: "rgba(19, 126, 158, 0.1)",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    alignItems: "center",
+  detailIconWrapper: {
+    width: 28,          
+    alignItems: "flex-start",
     justifyContent: "center",
-  },
-  tileText: {
-    color: colors.textSecondary,
-    marginTop: 8,
+},
+  detailItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+},
+  detailText: {
     fontSize: 14,
-    textAlign: "center",
-  },
+    color: colors.textSecondary,
+    flexShrink: 1,
+},
 });
