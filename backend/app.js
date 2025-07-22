@@ -19,51 +19,6 @@ const pool = new Pool({
 
 app.use(cors());
 
-
-app.get('/api/currentWeather', async (req, res) => {
-    const { latitude, longitude } = req.query;
-
-    if (!latitude || !longitude) {
-        return res.status(400).json({ error: "latitude und longitude müssen angegeben werden" });
-    }
-
-    try {
-        const weatherResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`);
-        const weatherData = await weatherResponse.json();
-
-        if (weatherData.error) {
-            return res.status(500).json({ error: "Keine Wetterdaten vorhanden" });
-        }
-
-        const username = process.env.GEONAMES_USERNAME;
-        const geoResponse = await fetch(`http://api.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&lang=de&username=${username}`);
-        const geoData = await geoResponse.json();
-
-        let germanLocation = { city: null, region: null, country: null };
-
-        if (geoData.geonames && geoData.geonames.length > 0) {
-            germanLocation = {
-                city: geoData.geonames[0].name,
-                region: geoData.geonames[0].adminName1 ?? null,
-                country: geoData.geonames[0].countryName ?? null,
-            };
-        }
-
-        res.json({
-            ...weatherData,
-            location: {
-                ...weatherData.location,
-                name: germanLocation.city || weatherData.location.name,
-                region: germanLocation.region || weatherData.location.region,
-                country: germanLocation.country || weatherData.location.country,
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ error: "Fehler beim Abrufen der Daten" });
-    }
-});
-
-
 app.get("/api/cities", async (req, res) => {
     const query = req.query.q?.toString().trim();
     const latitude = req.query.latitude;
@@ -113,6 +68,101 @@ app.get("/api/cities", async (req, res) => {
         res.status(500).json({ error: "Fehler beim Abrufen von GeoNames" });
     }
 
+});
+
+app.get('/api/currentWeather', async (req, res) => {
+    const { latitude, longitude } = req.query;
+
+    if (!latitude || !longitude) {
+        return res.status(400).json({ error: "latitude und longitude müssen angegeben werden" });
+    }
+
+    try {
+        const weatherResponse = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`);
+        const weatherData = await weatherResponse.json();
+
+        if (weatherData.error) {
+            return res.status(500).json({ error: "Keine Wetterdaten vorhanden" });
+        }
+
+        const username = process.env.GEONAMES_USERNAME;
+        const geoResponse = await fetch(`http://api.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&lang=de&username=${username}`);
+        const geoData = await geoResponse.json();
+
+        let germanLocation = { city: null, region: null, country: null };
+
+        if (geoData.geonames && geoData.geonames.length > 0) {
+            germanLocation = {
+                city: geoData.geonames[0].name,
+                region: geoData.geonames[0].adminName1 ?? null,
+                country: geoData.geonames[0].countryName ?? null,
+            };
+        }
+
+        res.json({
+            ...weatherData,
+            location: {
+                ...weatherData.location,
+                name: germanLocation.city || weatherData.location.name,
+                region: germanLocation.region || weatherData.location.region,
+                country: germanLocation.country || weatherData.location.country,
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Fehler beim Abrufen der Daten" });
+    }
+});
+
+
+app.get("/api/forecastWeather", async (req, res) => {
+    console.log("WeatherAPI Antwort:", weatherData);
+    console.log("WeatherAPI forecast:", forecastData);
+    console.log("WeatherAPI forecast:", forecastday);
+    const { latitude, longitude } = req.query;
+
+    if (!latitude || !longitude) {
+        return res.status(400).json({ error: "latitude und longitude müssen angegeben werden" });
+    }
+
+    try {
+        const weatherResponse = await fetch(
+            `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`
+        );
+        const weatherData = await weatherResponse.json();
+
+        if (weatherData.error) {
+            return res.status(500).json({ error: "Keine Vorhersagedaten vorhanden" });
+        }
+
+        const username = process.env.GEONAMES_USERNAME;
+        const geoResponse = await fetch(
+            `http://api.geonames.org/findNearbyPlaceNameJSON?lat=${latitude}&lng=${longitude}&lang=de&username=${username}`
+        );
+        const geoData = await geoResponse.json();
+
+        let germanLocation = { city: null, region: null, country: null };
+
+        if (geoData.geonames && geoData.geonames.length > 0) {
+            germanLocation = {
+                city: geoData.geonames[0].name,
+                region: geoData.geonames[0].adminName1 ?? null,
+                country: geoData.geonames[0].countryName ?? null,
+            };
+        }
+
+        res.json({
+            location: {
+                ...weatherData.location,
+                name: germanLocation.city || weatherData.location.name,
+                region: germanLocation.region || weatherData.location.region,
+                country: germanLocation.country || weatherData.location.country,
+            },
+            forecast: weatherData.forecast.forecastday,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Fehler beim Abrufen der Forecast-Daten" });
+    }
 });
 
 app.listen(port, '0.0.0.0', () => {

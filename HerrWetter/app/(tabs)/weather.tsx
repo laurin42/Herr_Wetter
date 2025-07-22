@@ -14,10 +14,11 @@ import {
 } from "react-native-safe-area-context";
 import { darkThemeColors } from "@/theme/darkThemeColors";
 import { lightThemeColors } from "@/theme/lightThemeColors";
-import CurrentWeatherCard from "@/components/currentWeatherCard";
+import CurrentWeatherCard from "@/components/CurrentWeatherCard";
+import ForecastWeatherCard from "@/components/ForecastWeatherCard";
 import { useCitySuggestions } from "@/hooks/useCitySuggestions";
-import LocationSelector from "@/components/location/locationSelector";
-import LocationSuggestionList from "@/components/location/locationSuggestionList";
+import LocationSelector from "@/components/location/LocationSelector";
+import LocationSuggestionList from "@/components/location/LocationSuggestionList";
 import { useWeather } from "@/hooks/useWeather";
 import { getLocationSelectorHeight } from "@/utils/layout";
 import LinearGradient from "react-native-linear-gradient";
@@ -41,7 +42,8 @@ export default function WeatherScreen() {
   const insets = useSafeAreaInsets();
   const LOCATION_SELECTOR_HEIGHT = getLocationSelectorHeight();
 
-  const { weather, isLoading, error, loadWeatherByCoords } = useWeather();
+  const { weather, forecast, isLoading, error, loadWeatherByCoords } =
+    useWeather();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -53,6 +55,10 @@ export default function WeatherScreen() {
   useEffect(() => {
     loadWeatherByCoords(selectedCoords || undefined);
   }, [selectedCoords, loadWeatherByCoords]);
+
+  useEffect(() => {
+    console.log("forecast aus Hook:", forecast);
+  }, [forecast]);
 
   return (
     <SafeAreaProvider>
@@ -102,6 +108,11 @@ export default function WeatherScreen() {
 
             <CurrentWeatherCard
               weather={weather}
+              isLoading={isLoading}
+              error={error}
+            />
+            <ForecastWeatherCard
+              forecast={forecast}
               isLoading={isLoading}
               error={error}
             />

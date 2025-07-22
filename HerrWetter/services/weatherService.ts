@@ -23,6 +23,27 @@ export type WeatherData = {
   };
 };
 
+export type ForecastDay = {
+  date: string;
+  day: {
+    maxtemp_c: number;
+    mintemp_c: number;
+    avgtemp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+    };
+  };
+};
+
+export type ForecastData = {
+  location: WeatherData["location"];
+  forecast: ForecastDay[];
+};
+
+
+
+
 
 export async function fetchWeatherByCoords(coords: Coordinates): Promise<WeatherData> {
   const response = await fetch(
@@ -92,4 +113,21 @@ export async function getCurrentWeatherByCity(city: string): Promise<{
   } catch (err: any) {
     return { loading: false, error: err.message || "Unbekannter Fehler", data: null };
   }
+}
+
+export async function fetchForecastByCoords(coords: Coordinates): Promise<ForecastData> {
+  const response = await fetch(
+    `http://192.168.178.67:3000/api/forecastWeather?latitude=${coords.latitude}&longitude=${coords.longitude}`,
+    { cache: "no-store" }
+  );
+
+  const data = await response.json();
+  console.log("RAW forecast data:", data);
+
+  if (!response.ok) throw new Error("Fehler beim Abrufen der Vorhersage.");
+
+  return {
+    location: data.location,
+    forecast: data.forecast || [], 
+  };
 }
