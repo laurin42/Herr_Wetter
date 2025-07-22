@@ -50,9 +50,11 @@ export default function LocationSuggestionList({
           return (
             <Pressable
               onPress={async () => {
-                console.log("Gewählter Ort:", item.city);
+                const suggestionQuery = [item.city, item.region, item.country]
+                  .filter(Boolean)
+                  .join(", ");
                 const { location, displayName, error } = await resolveLocation(
-                  item.city
+                  suggestionQuery
                 );
                 console.log(
                   "ResolveLocation Ergebnis:",

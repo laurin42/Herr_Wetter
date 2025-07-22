@@ -22,7 +22,7 @@ export async function resolveLocation(city?: string): Promise<{
 
         return { location: { latitude: coords.latitude, longitude: coords.longitude }, displayName, error: null };
       } else {
-        return { location: null, displayName: null, error: "Stadt nicht gefunden" };
+        return { location: null, displayName: null, error: `${city}Stadt nicht gefunden` };
       }
     } else {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -44,6 +44,6 @@ export async function resolveLocation(city?: string): Promise<{
       };
     }
   } catch (e) {
-    return { location: null, displayName: null, error: "Fehler beim Ermitteln der Position" };
+    return ({ location: null, displayName: null, error: "Fehler beim Ermitteln der Position" }) ;
   }
 }

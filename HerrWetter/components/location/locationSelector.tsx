@@ -111,7 +111,7 @@ export default function LocationSelector({
                 }}
               >
                 <Text style={styles.location}>
-                  {weather?.location.name || displayName || "Standort wählen"}
+                  {displayName || weather?.location.name || "Standort wählen"}
                 </Text>
               </Pressable>
             ) : (
