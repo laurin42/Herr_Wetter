@@ -15,28 +15,31 @@ export function useWeather() {
 
   const loadWeatherByCoords = useCallback(
     async (coords?: Coordinates) => {
+      if (!coords) return; 
+
       setIsLoading(true);
       setError(null); 
 
-      const { data, error: weatherError } = await getCurrentWeatherByLocation(
-        coords?.latitude,
-        coords?.longitude
-      );
-      setWeather(data);
-      if (weatherError) setError(weatherError);
+      try {
+        const [weatherResult, forecastResult] = await Promise.all([
+          getCurrentWeatherByLocation(coords.latitude, coords.longitude),
+          fetchForecastByCoords(coords),
+        ]);
+        
+        const { data: weatherData, error: weatherError } = weatherResult;
+        
+        setWeather(weatherData);
+        setForecast(forecastResult);
 
-      if (data && coords) {
-        try {
-          console.log("Lade Forecast mit coords:", coords);
-          const forecastData = await fetchForecastByCoords(coords);
-          console.log("Forecast Daten:", forecastData);
-          setForecast(forecastData);
-        } catch (e: any) {
-          console.error("Fehler bei der Vorhersage:", e.message);
-          setError(e.message || "Fehler bei der Vorhersage");
+        if (weatherError) {
+          setError(weatherError);
         }
+      } catch (e: any) {
+        console.error("Fehler beim Laden der Wetterdaten:", e.message);
+        setError(e.message || "Fehler beim Laden der Wetterdaten")
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
     []
   );

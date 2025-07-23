@@ -1,13 +1,19 @@
 import { StyleSheet } from "react-native";
-import { lightThemeColors as colors } from "@/theme/lightThemeColors";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
 
-export const locationSelectorLight = StyleSheet.create({
+export const getLocationStyles = (isDark: boolean) => {
+  const colors = isDark ? darkThemeColors : lightThemeColors;
+  return StyleSheet.create({
     container: {
         margin: 16,
         padding: 20,
         borderRadius: 12,
         backgroundColor: colors.cardTransparent,
-        maxHeight: 200,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        maxHeight: 120,
         position: "relative",
 
     },       
@@ -20,6 +26,7 @@ export const locationSelectorLight = StyleSheet.create({
 
     },
     locationTextContainer: {
+        flexShrink: 1,
         justifyContent: "flex-start",
         flexDirection: "column",
     },
@@ -36,16 +43,17 @@ export const locationSelectorLight = StyleSheet.create({
         justifyContent: "space-between",
     },
     locationDetails: {
+        flexShrink: 1,
         fontSize: 14,
         color: colors.textSecondary,
     },
     searchIcon: {
-        fontSize: 42,
+        fontSize: 32,
         color: colors.ui.buttonPrimary,
     },
     locationIcon: {
-        fontSize: 42,
-        color: colors.ui.buttonSecondary,
+        fontSize: 32,
+        color: colors.ui.buttonPrimary,
     },
     locationIcons: {
         position: "absolute",
@@ -60,7 +68,7 @@ export const locationSelectorLight = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1000,
-        backgroundColor: colors.cardTransparent,
+        backgroundColor: colors.card,
         borderRadius: 8,
         elevation: 8, 
         shadowOffset: { width: 0, height: 2 },
@@ -68,3 +76,4 @@ export const locationSelectorLight = StyleSheet.create({
         shadowRadius: 4,
         },
     });
+}

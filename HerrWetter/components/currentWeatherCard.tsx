@@ -1,9 +1,7 @@
 import React from "react";
 import { Text, Image, View, useColorScheme } from "react-native";
-import { lightWeatherStyles } from "@/styles/currentWeatherLight";
-import { darkWeatherStyles } from "@/styles/currentWeatherDark";
-import { lightThemeColors } from "@/theme/lightThemeColors";
-import { darkThemeColors } from "@/theme/darkThemeColors";
+import { getCurrentWeatherStyles } from "@/styles/currentWeatherStyles";
+import { lightThemeColors, darkThemeColors } from "@/theme/themeColors";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -21,8 +19,8 @@ export default function CurrentWeatherCard({
   error,
 }: CurrentWeatherCardProps) {
   const colorScheme = useColorScheme();
-  const styles =
-    colorScheme === "dark" ? darkWeatherStyles : lightWeatherStyles;
+  const isDark = colorScheme === "dark";
+  const styles = getCurrentWeatherStyles(isDark);
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
   return (

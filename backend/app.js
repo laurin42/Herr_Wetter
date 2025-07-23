@@ -115,9 +115,6 @@ app.get('/api/currentWeather', async (req, res) => {
 
 
 app.get("/api/forecastWeather", async (req, res) => {
-    console.log("WeatherAPI Antwort:", weatherData);
-    console.log("WeatherAPI forecast:", forecastData);
-    console.log("WeatherAPI forecast:", forecastday);
     const { latitude, longitude } = req.query;
 
     if (!latitude || !longitude) {

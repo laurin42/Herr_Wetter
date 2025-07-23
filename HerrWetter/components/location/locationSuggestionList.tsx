@@ -8,11 +8,10 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { CitySuggestion } from "@/hooks/useCitySuggestions";
-import { locationListLight } from "@/styles/locationListLight";
-import { locationListDark } from "@/styles/locationListDark";
 import { ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { resolveLocation, Coordinates } from "@/utils/resolveLocation";
+import { getCitySuggestionStyles } from "@/styles/citySuggestionStyles";
 
 type locSuggestionListProps = {
   suggestions: CitySuggestion[];
@@ -26,7 +25,8 @@ export default function LocationSuggestionList({
   style,
 }: locSuggestionListProps) {
   const colorScheme = useColorScheme();
-  const styles = colorScheme === "dark" ? locationListDark : locationListLight;
+  const isDark = colorScheme === "dark";
+  const styles = getCitySuggestionStyles(isDark);
 
   const { height: windowHeight } = useWindowDimensions();
   const maxHeight = Math.min(suggestions.length * 96, windowHeight * 0.7);

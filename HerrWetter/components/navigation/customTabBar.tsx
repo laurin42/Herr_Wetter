@@ -1,8 +1,7 @@
 import { Animated, View, Platform, useColorScheme } from "react-native";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
-import { darkThemeColors } from "@/theme/darkThemeColors";
-import { lightThemeColors } from "@/theme/lightThemeColors";
+import { lightThemeColors, darkThemeColors } from "@/theme/themeColors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 
@@ -14,10 +13,10 @@ export function MyTabBar({
 }: MaterialTopTabBarProps) {
   const { buildHref } = useLinkBuilder();
 
+  const insets = useSafeAreaInsets();
+
   const colorScheme = useColorScheme();
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
-
-  const insets = useSafeAreaInsets();
 
   return (
     <View

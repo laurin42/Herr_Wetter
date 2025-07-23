@@ -1,9 +1,7 @@
 import React from "react";
 import { Text, Image, View, useColorScheme, FlatList } from "react-native";
-import { lightThemeColors } from "@/theme/lightThemeColors";
-import { darkThemeColors } from "@/theme/darkThemeColors";
-import { forecastWeatherDark } from "@/styles/forecastWeatherDark";
-import { forecastWeatherLight } from "@/styles/forecastWeatherlight";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
+import { getForecastWeatherStyles } from "@/styles/forecastWeatherStyles";
 import { ForecastData } from "@/services/weatherService";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
@@ -19,8 +17,8 @@ export default function ForecastWeatherCard({
   error,
 }: ForecastWeatherCardProps) {
   const colorScheme = useColorScheme();
-  const styles =
-    colorScheme === "dark" ? forecastWeatherDark : forecastWeatherLight;
+  const isDark = colorScheme === "dark";
+  const styles = getForecastWeatherStyles(isDark);
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
   return (

@@ -1,18 +1,19 @@
 import { StyleSheet } from "react-native";
-import { darkThemeColors } from "@/theme/darkThemeColors";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
 
-const colors = darkThemeColors;
+export const getForecastWeatherStyles = (isDark: boolean) => {
+  const colors = isDark ? darkThemeColors : lightThemeColors;
 
-export const forecastWeatherDark = StyleSheet.create({
+  return StyleSheet.create({
+  contentWrapper: {
+    flexDirection: "column",
+    gap: 16,
+  },    
   container: {
     margin: 16,
     padding: 20,
     borderRadius: 12,
     backgroundColor: colors.cardTransparent,
-  },
-  contentWrapper: {
-    flexDirection: "column",
-    gap: 16,
   },
   cardTitle: {
     fontSize: 18,
@@ -52,3 +53,4 @@ export const forecastWeatherDark = StyleSheet.create({
     marginTop: 4,
   },
 });
+}

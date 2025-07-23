@@ -1,7 +1,9 @@
 import { StyleSheet } from "react-native";
-import { darkThemeColors as colors} from "@/theme/darkThemeColors";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
 
-export const locationListDark = StyleSheet.create({
+export const getCitySuggestionStyles = (isDark: boolean) => {
+  const colors = isDark ? darkThemeColors : lightThemeColors;
+  return StyleSheet.create({
     container: {
       marginBottom: 8,
       backgroundColor: colors.card,
@@ -41,3 +43,4 @@ export const locationListDark = StyleSheet.create({
         marginRight: 12,
     }
   });
+}

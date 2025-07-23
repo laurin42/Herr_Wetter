@@ -1,7 +1,10 @@
 import { StyleSheet } from "react-native";
-import { darkThemeColors as colors } from "@/theme/darkThemeColors";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
 
-export const darkWeatherStyles = StyleSheet.create({
+export const getCurrentWeatherStyles = (isDark: boolean) => {
+  const colors = isDark ? darkThemeColors : lightThemeColors;
+
+  return StyleSheet.create({
   contentWrapper: {
     flexDirection: "column",
     gap: 16,
@@ -90,3 +93,4 @@ export const darkWeatherStyles = StyleSheet.create({
     flexShrink: 1,
 },
 });
+}

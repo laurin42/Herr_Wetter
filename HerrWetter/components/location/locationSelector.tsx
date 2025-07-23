@@ -11,8 +11,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { CitySuggestion } from "@/hooks/useCitySuggestions";
-import { locationSelectorDark } from "@/styles/locationSelectorDark";
-import { locationSelectorLight } from "@/styles/locationSelectorLight";
+import { getLocationStyles } from "@/styles/locationStyles";
 import { Coordinates, resolveLocation } from "@/utils/resolveLocation";
 import { WeatherData } from "@/services/weatherService";
 
@@ -42,11 +41,12 @@ export default function LocationSelector({
   containerStyle,
 }: LocationSelectorProps) {
   const [loadingLocation, setLoadingLocation] = useState(false);
-  const colorScheme = useColorScheme();
-  const styles =
-    colorScheme === "dark" ? locationSelectorDark : locationSelectorLight;
 
   const textInputRef = useRef<TextInput>(null);
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+  const styles = getLocationStyles(isDark);
 
   useEffect(() => {
     if (editCity) {

@@ -3,26 +3,24 @@ import {
   View,
   ScrollView,
   useColorScheme,
-  useWindowDimensions,
-  Pressable,
   RefreshControl,
+  ActivityIndicator,
+  Text,
 } from "react-native";
 import {
   SafeAreaView,
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { darkThemeColors } from "@/theme/darkThemeColors";
-import { lightThemeColors } from "@/theme/lightThemeColors";
+import { darkThemeColors, lightThemeColors } from "@/theme/themeColors";
 import CurrentWeatherCard from "@/components/CurrentWeatherCard";
 import ForecastWeatherCard from "@/components/ForecastWeatherCard";
 import { useCitySuggestions } from "@/hooks/useCitySuggestions";
 import LocationSelector from "@/components/location/LocationSelector";
 import LocationSuggestionList from "@/components/location/LocationSuggestionList";
 import { useWeather } from "@/hooks/useWeather";
-import { getLocationSelectorHeight } from "@/utils/layout";
 import LinearGradient from "react-native-linear-gradient";
-import { Coordinates } from "@/utils/resolveLocation";
+import { Coordinates, resolveLocation } from "@/utils/resolveLocation";
 
 export default function WeatherScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -38,27 +36,32 @@ export default function WeatherScreen() {
   const colorScheme = useColorScheme();
   const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
-  const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const LOCATION_SELECTOR_HEIGHT = getLocationSelectorHeight();
 
   const { weather, forecast, isLoading, error, loadWeatherByCoords } =
     useWeather();
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+  useEffect(() => {
+    if (!selectedCoords) {
+      (async () => {
+        const { location } = await resolveLocation();
+        if (location) setSelectedCoords(location);
+      })();
+    }
+  }, [selectedCoords]);
 
   useEffect(() => {
-    loadWeatherByCoords(selectedCoords || undefined);
+    if (selectedCoords) {
+      loadWeatherByCoords(selectedCoords);
+    }
   }, [selectedCoords, loadWeatherByCoords]);
 
-  useEffect(() => {
-    console.log("forecast aus Hook:", forecast);
-  }, [forecast]);
+  const onRefresh = useCallback(() => {
+    if (selectedCoords) {
+      setRefreshing(true);
+      loadWeatherByCoords(selectedCoords).finally(() => setRefreshing(false));
+    }
+  }, [selectedCoords, loadWeatherByCoords]);
 
   return (
     <SafeAreaProvider>
@@ -84,101 +87,93 @@ export default function WeatherScreen() {
             paddingTop: insets.top,
           }}
         >
-          <ScrollView
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          >
-            <View style={{ height: LOCATION_SELECTOR_HEIGHT }}>
-              {!editCity && (
-                <LocationSelector
-                  city={city}
-                  setCity={setCity}
-                  editCity={editCity}
-                  setEditCity={setEditCity}
-                  setSelectedCoords={setSelectedCoords}
-                  setDisplayName={setDisplayName}
-                  displayName={displayName}
-                  suggestions={suggestions}
-                  weather={weather}
-                  containerStyle={{ backgroundColor: colors.cardTransparent }}
-                />
-              )}
-            </View>
-
-            <CurrentWeatherCard
-              weather={weather}
-              isLoading={isLoading}
-              error={error}
-            />
-            <ForecastWeatherCard
-              forecast={forecast}
-              isLoading={isLoading}
-              error={error}
-            />
-          </ScrollView>
-
-          {editCity && (
-            <Pressable
-              onPress={() => setEditCity(false)}
+          {isLoading && !weather && (
+            <View
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: "transparent",
-                zIndex: 10,
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <View
-                style={{
-                  flex: 1,
-                  position: "absolute",
-                  width: "100%",
-                  height: LOCATION_SELECTOR_HEIGHT,
-                  top: insets.top + windowHeight * 0.036,
+              <ActivityIndicator size="large" color={colors.text} />
+              <Text style={{ marginTop: 10, color: colors.text }}>
+                Lade Wetterdaten...
+              </Text>
+            </View>
+          )}
+
+          {!isLoading && error && (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "red" }}>{error}</Text>
+            </View>
+          )}
+
+          {!error && (
+            <ScrollView
+              contentContainerStyle={{ paddingBottom: 32 }}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            >
+              <LocationSelector
+                city={city}
+                setCity={setCity}
+                editCity={editCity}
+                setEditCity={setEditCity}
+                setSelectedCoords={setSelectedCoords}
+                setDisplayName={setDisplayName}
+                displayName={displayName}
+                suggestions={suggestions}
+                weather={weather}
+                containerStyle={{
+                  backgroundColor: colors.cardTransparent,
+                  margin: 16,
+                  borderRadius: 12,
+                  padding: 20,
                 }}
-              >
-                <LocationSelector
-                  city={city}
-                  setCity={setCity}
-                  editCity={editCity}
-                  setEditCity={setEditCity}
-                  setSelectedCoords={setSelectedCoords}
-                  setDisplayName={setDisplayName}
-                  displayName={displayName}
-                  suggestions={suggestions}
-                  weather={weather}
-                  containerStyle={{ backgroundColor: colors.card }}
-                />
-              </View>
-              {suggestions.length > 0 && (
-                <LocationSuggestionList
-                  suggestions={suggestions}
-                  onSelect={(coords, displayName) => {
-                    console.log("onSelect received:", coords, displayName);
-                    setSelectedCoords(coords);
-                    setDisplayName(displayName);
-                    setEditCity(false);
-                  }}
-                  style={{
-                    position: "absolute",
-                    top: insets.top + windowHeight * 0.204,
-                    left: 16,
-                    right: 16,
-                    zIndex: 11,
-                    backgroundColor: colors.card,
-                    borderRadius: 8,
-                    elevation: 8,
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                  }}
-                />
-              )}
-            </Pressable>
+              />
+              <CurrentWeatherCard
+                weather={weather}
+                isLoading={isLoading}
+                error={error}
+              />
+              <ForecastWeatherCard
+                forecast={forecast}
+                isLoading={isLoading}
+                error={error}
+              />
+            </ScrollView>
+          )}
+
+          {editCity && suggestions.length > 0 && (
+            <LocationSuggestionList
+              suggestions={suggestions}
+              onSelect={(coords, displayName) => {
+                setSelectedCoords(coords);
+                setDisplayName(displayName);
+                setEditCity(false);
+              }}
+              style={{
+                position: "absolute",
+                top: insets.top + 90,
+                left: 16,
+                right: 16,
+                zIndex: 20,
+                backgroundColor: colors.card,
+                borderRadius: 8,
+                elevation: 8,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+              }}
+            />
           )}
         </SafeAreaView>
       </View>

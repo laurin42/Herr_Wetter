@@ -1,41 +1,36 @@
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, useColorScheme } from "react-native";
+import { View, Text, ActivityIndicator, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { resolveLocation, Coordinates } from "../utils/resolveLocation";
-import { darkThemeStyles } from "@/styles/darkThemeStyles";
-import { lightThemeStyles } from "@/styles/lightThemeStyles";
-import { darkThemeColors } from "@/theme/darkThemeColors";
-import { lightThemeColors } from "@/theme/lightThemeColors";
+import { getCurrentThemeStyles } from "@/styles/themeStyles";
+import { lightThemeColors, darkThemeColors } from "@/theme/themeColors";
 
 export default function Index() {
   const [location, setLocation] = useState<Coordinates | null>(null);
-  const [city, setCity] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const colorScheme = useColorScheme();
-  const styles = colorScheme === "dark" ? darkThemeStyles : lightThemeStyles;
-  const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
   const insets = useSafeAreaInsets();
-
-  async function loadLocation(cityOverride?: string) {
-    setLoading(true);
-    const { location, error } = await resolveLocation(cityOverride);
-    setLocation(location);
-    setError(error);
-    setLoading(false);
-  }
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+  const styles = getCurrentThemeStyles(isDark);
+  const colors = colorScheme === "dark" ? darkThemeColors : lightThemeColors;
 
   useEffect(() => {
-    loadLocation();
+    (async () => {
+      const { location, error } = await resolveLocation();
+      setLocation(location);
+      setError(error);
+      setLoading(false);
+    })();
   }, []);
 
-  if (location) {
+  if (location || error) {
     return (
       <Redirect
-        href={`/weather?latitude=${location.latitude}&longitude=${
-          location.longitude
+        href={`/weather?latitude=${location?.latitude || ""}&longitude=${
+          location?.longitude || ""
         }&error=${error || ""}`}
       />
     );
@@ -45,36 +40,24 @@ export default function Index() {
     <View
       style={{
         flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
         paddingTop: insets.top,
         backgroundColor: colors.background,
       }}
     >
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          {loading
-            ? "Standort wird ermittelt..."
-            : error || "Standort nicht verfügbar"}
+      {loading ? (
+        <>
+          <ActivityIndicator size="large" color={colors.text} />
+          <Text style={{ color: colors.text, marginTop: 10 }}>
+            Standort wird ermittelt...
+          </Text>
+        </>
+      ) : (
+        <Text style={{ color: "red" }}>
+          Standort konnte nicht ermittelt werden
         </Text>
-
-        {!loading && (
-          <>
-            <TextInput
-              placeholder="Stadt eingeben"
-              value={city}
-              onChangeText={setCity}
-              style={styles.input}
-            />
-            <Button
-              title="Stadt verwenden"
-              onPress={() => {
-                if (city.trim()) {
-                  loadLocation(city.trim());
-                }
-              }}
-            />
-          </>
-        )}
-      </View>
+      )}
     </View>
   );
 }
