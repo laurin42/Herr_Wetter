@@ -10,9 +10,11 @@ export const getCurrentWeatherStyles = (isDark: boolean) => {
     gap: 16,
   },    
   container: {
-    margin: 16,
-    padding: 20,
-    borderRadius: 12,
+    marginVertical: 2,
+    marginHorizontal: 8,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    padding: 24,
     backgroundColor: colors.cardTransparent,
   },
   cardTitle: {

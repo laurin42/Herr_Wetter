@@ -23,7 +23,7 @@ export function MyTabBar({
       style={{
         position: "absolute",
         flexDirection: "row",
-        backgroundColor: "transparent",
+        backgroundColor: colors.tabBarBackground,
         elevation: 0,
         shadowOpacity: 0,
         shadowOffset: { width: 0, height: 0 },

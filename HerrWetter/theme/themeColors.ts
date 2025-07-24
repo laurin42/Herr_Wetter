@@ -1,6 +1,7 @@
 export const darkThemeColors = {
   backgroundSecondary: "rgb(15, 20, 37)",
   background:"rgb(6, 37, 71)",
+  tabBarBackground: "rgb(6, 37, 71)",
   card:"rgb(20, 49, 78)",
   cardTransparent: "rgba(20, 49, 78, 0.8)",
   text: "#FFFFFF",
@@ -33,6 +34,7 @@ export const darkThemeColors = {
 export const lightThemeColors = {
   background: "#F5F7FA",
   backgroundSecondary: "rgba(19, 126, 158, 1)",
+  tabBarBackground: "rgb(255,255,255)",
   card:"rgb(245, 250, 255)",
   cardTransparent:"rgba(245, 250, 255, 0.4)",
   text:"rgb(31, 111, 156)",

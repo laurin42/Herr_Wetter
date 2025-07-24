@@ -126,6 +126,9 @@ app.get("/api/forecastWeather", async (req, res) => {
             `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&lang=de`
         );
         const weatherData = await weatherResponse.json();
+        console.log(weatherData);
+        console.log(weatherData.forecast.forecastday);
+        console.log(weatherData.forecast);
 
         if (weatherData.error) {
             return res.status(500).json({ error: "Keine Vorhersagedaten vorhanden" });

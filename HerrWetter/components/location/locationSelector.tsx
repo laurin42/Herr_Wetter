@@ -57,6 +57,11 @@ export default function LocationSelector({
       return () => clearTimeout(timer);
     } else {
       Keyboard.dismiss();
+      if (!city.trim()) {
+        const fallbackCity =
+          weather?.location.name || displayName || "Standort wählen";
+        setCity(fallbackCity);
+      }
     }
   }, [editCity]);
 
@@ -111,7 +116,12 @@ export default function LocationSelector({
                 }}
               >
                 <Text style={styles.location}>
-                  {displayName || weather?.location.name || "Standort wählen"}
+                  {weather?.location.name || displayName || "Standort wählen"}
+                </Text>
+                <Text style={styles.locationDetails}>
+                  {[weather?.location.region, weather?.location.country]
+                    .filter(Boolean)
+                    .join(", ")}
                 </Text>
               </Pressable>
             ) : (
@@ -121,7 +131,9 @@ export default function LocationSelector({
                 value={city}
                 onChangeText={setCity}
                 placeholder={"Ort eingeben..."}
-                placeholderTextColor="#aaa"
+                placeholderTextColor={
+                  colorScheme === "dark" ? "#aaa" : "lightblue"
+                }
                 returnKeyType="search"
                 onSubmitEditing={handleSubmit}
                 editable={true}
@@ -133,12 +145,6 @@ export default function LocationSelector({
                 cursorColor={colorScheme === "dark" ? "white" : "#16396d"}
               />
             )}
-
-            <Text style={styles.locationDetails}>
-              {[weather?.location.region, weather?.location.country]
-                .filter(Boolean)
-                .join(", ")}
-            </Text>
           </View>
         </View>
 

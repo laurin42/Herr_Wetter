@@ -133,9 +133,6 @@ export default function WeatherScreen() {
                 weather={weather}
                 containerStyle={{
                   backgroundColor: colors.cardTransparent,
-                  margin: 16,
-                  borderRadius: 12,
-                  padding: 20,
                 }}
               />
               <CurrentWeatherCard
@@ -161,7 +158,7 @@ export default function WeatherScreen() {
               }}
               style={{
                 position: "absolute",
-                top: insets.top + 90,
+                top: insets.top + 140,
                 left: 16,
                 right: 16,
                 zIndex: 20,

@@ -5,9 +5,11 @@ export const getLocationStyles = (isDark: boolean) => {
   const colors = isDark ? darkThemeColors : lightThemeColors;
   return StyleSheet.create({
     container: {
-        margin: 16,
-        padding: 20,
-        borderRadius: 12,
+        marginHorizontal: 8,
+        marginBottom: 4,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        padding: 8,
         backgroundColor: colors.cardTransparent,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -15,24 +17,23 @@ export const getLocationStyles = (isDark: boolean) => {
         shadowRadius: 4,
         maxHeight: 120,
         position: "relative",
-
     },       
     locationContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingBottom: 6,
-
+        padding: 6,
+        paddingHorizontal: 8,
     },
     locationTextContainer: {
         flexShrink: 1,
         justifyContent: "flex-start",
         flexDirection: "column",
+        paddingHorizontal: 4,
     },
     location: {
         minHeight: 40,
-        paddingVertical: 8,
         display: "flex",
         fontSize: 24,
         color: colors.text,
@@ -43,6 +44,7 @@ export const getLocationStyles = (isDark: boolean) => {
         justifyContent: "space-between",
     },
     locationDetails: {
+        paddingHorizontal: 4,
         flexShrink: 1,
         fontSize: 14,
         color: colors.textSecondary,
